@@ -12,6 +12,7 @@
     "@hookform/resolvers": "^5.2.1",
     "convex": "^1.25.4",
     "date-fns": "^4.1.0",
+    "dotenv": "^17.2.1",
     "next": "15.4.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",

@@ -10,7 +10,7 @@ import { api } from "./_generated/api";
  */
 export const createCheckoutSession: any = action({
   args: {
-    email: v.string(),
+    email: v.optional(v.string()),
     phone: v.optional(v.string()),
     count: v.number(),
     bundle: v.optional(v.boolean()),
@@ -51,13 +51,16 @@ export const createCheckoutSession: any = action({
     }
 
     try {
-      // Create Stripe checkout session
+      // Create Stripe checkout session with mobile optimizations
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         mode: 'payment',
         success_url: args.successUrl,
         cancel_url: args.cancelUrl,
-        customer_email: args.email,
+        ...(args.email ? { customer_email: args.email } : {}),
+        // Mobile-friendly options
+        billing_address_collection: 'auto',
+        submit_type: 'pay',
         line_items: [
           {
             price_data: {
@@ -73,13 +76,15 @@ export const createCheckoutSession: any = action({
           },
         ],
         metadata: {
-          email: args.email,
+          ...(args.email ? { email: args.email } : {}),
           phone: args.phone || '',
           count: args.count.toString(),
           bundle: (args.bundle || false).toString(),
           raffleId: 'current', // Could be dynamic if multiple raffles
         },
         expires_at: Math.floor(Date.now() / 1000) + (30 * 60), // 30 minutes
+        // Mobile compatibility settings
+        locale: 'auto',
       });
 
       // Create pending entry in database

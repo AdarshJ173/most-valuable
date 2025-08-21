@@ -1,5 +1,6 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+import { api } from "./_generated/api";
 
 /**
  * Create a pending entry before Stripe checkout
@@ -7,7 +8,7 @@ import { v } from "convex/values";
  */
 export const createPendingEntry = mutation({
   args: {
-    email: v.string(),
+    email: v.optional(v.string()),
     phone: v.optional(v.string()),
     count: v.number(),
     bundle: v.optional(v.boolean()),
@@ -15,11 +16,8 @@ export const createPendingEntry = mutation({
     ipAddress: v.optional(v.string()),
   },
   handler: async (ctx, { email, phone, count, bundle, stripeSessionId, ipAddress }) => {
-    // Validate input
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      throw new Error("Invalid email format");
-    }
+    // Normalize optional email
+    const normalizedEmail = email ? email.toLowerCase() : "";
 
     if (count <= 0 || count > 100) {
       throw new Error("Invalid entry count");
@@ -51,7 +49,7 @@ export const createPendingEntry = mutation({
 
     // Create pending entry
     return await ctx.db.insert("entries", {
-      email: email.toLowerCase(),
+      email: normalizedEmail,
       phone,
       count,
       amount,
@@ -133,6 +131,31 @@ export const handlePaymentSuccess = mutation({
     });
 
     console.log(`Payment completed for ${entry.email}: ${entry.count} entries`);
+
+    // Assign raffle tickets for this completed entry
+    try {
+      await ctx.runMutation(api.raffleTickets.assignTicketsToEntry, {
+        entryId: entry._id,
+      });
+      console.log(`🎫 Assigned ${entry.count} raffle tickets to ${entry.email}`);
+    } catch (ticketError) {
+      console.error('Failed to assign raffle tickets:', ticketError);
+      // Don't fail the payment processing if ticket assignment fails
+    }
+
+    // Notify admin of new order
+    try {
+      await ctx.runMutation(api.notifications.notifyAdminOfNewOrder, {
+        entryId: entry._id,
+        email: entry.email,
+        count: entry.count,
+        amount: entry.amount,
+        stripeSessionId,
+      });
+    } catch (notificationError) {
+      console.error('Failed to send admin notification:', notificationError);
+      // Don't fail the payment processing if notification fails
+    }
 
     return { 
       success: true, 

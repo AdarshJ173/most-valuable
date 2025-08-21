@@ -45,16 +45,37 @@ export default defineSchema({
     productDescription: v.optional(v.string()),
   }).index("by_active", ["isActive"]),
 
-  // Winner selection table - stores the randomly selected winner
-  winners: defineTable({
+  // Raffle winner history with full audit trail
+  raffleWinners: defineTable({
+    raffleConfigId: v.id("raffleConfig"),
     winnerEmail: v.string(),
+    winnerEntryId: v.id("entries"), // Reference to the winning entry
     selectedAt: v.number(),
-    raffleEndDate: v.number(), // When the raffle ended
-    totalLeadsCount: v.number(), // How many leads were eligible
-    selectionMethod: v.string(), // 'crypto.randomInt' for transparency
-    isActive: v.boolean(), // Only one active winner at a time
-  }).index("by_active", ["isActive"])
+    totalEntriesInPool: v.number(), // Total entries when winner was selected
+    winningTicketNumber: v.number(), // The randomly selected ticket number
+    randomSeed: v.string(), // For audit verification
+    selectionMethod: v.string(), // Algorithm used
+    verificationHash: v.string(), // Hash for verification
+    isActive: v.boolean(),
+    contactedAt: v.optional(v.number()),
+    prizeDeliveredAt: v.optional(v.number()),
+    deliveryAddress: v.optional(v.string()),
+    notes: v.optional(v.string()),
+  }).index("by_raffle", ["raffleConfigId"])
+    .index("by_active", ["isActive"])
+    .index("by_winner_email", ["winnerEmail"])
     .index("by_selected_at", ["selectedAt"]),
+
+  // Individual ticket tracking for complete audit trail
+  raffleTickets: defineTable({
+    entryId: v.id("entries"),
+    email: v.string(),
+    ticketNumber: v.number(), // Sequential ticket number in the pool
+    createdAt: v.number(),
+  }).index("by_entry", ["entryId"])
+    .index("by_email", ["email"])
+    .index("by_ticket_number", ["ticketNumber"])
+    .index("by_created_at", ["createdAt"]),
 
   // Payment webhooks log for debugging
   paymentEvents: defineTable({
@@ -73,4 +94,74 @@ export default defineSchema({
     .index("by_payment_intent", ["paymentIntent"])
     .index("by_session", ["sessionId"])
     .index("by_processed", ["processed"]),
+
+  // Admin notifications for order management
+  adminNotifications: defineTable({
+    type: v.string(), // "new_order", "payment_failed", "refund_requested", etc.
+    title: v.string(),
+    message: v.string(),
+    data: v.any(), // Additional structured data
+    isRead: v.boolean(),
+    createdAt: v.number(),
+  }).index("by_read_status", ["isRead"])
+    .index("by_type", ["type"])
+    .index("by_created_at", ["createdAt"]),
+
+  // Email notification logs
+  emailLogs: defineTable({
+    to: v.string(),
+    subject: v.string(),
+    message: v.string(),
+    data: v.string(), // JSON stringified
+    status: v.string(), // "pending", "sent", "failed"
+    sentAt: v.number(),
+    error: v.optional(v.string()),
+  }).index("by_status", ["status"])
+    .index("by_sent_at", ["sentAt"]),
+
+  // Error logging for debugging and monitoring
+  errorLogs: defineTable({
+    type: v.string(),
+    message: v.string(),
+    context: v.string(), // JSON stringified
+    severity: v.string(),
+    userId: v.optional(v.string()),
+    sessionId: v.optional(v.string()),
+    stackTrace: v.optional(v.string()),
+    resolved: v.boolean(),
+    resolution: v.optional(v.string()),
+    resolvedBy: v.optional(v.string()),
+    resolvedAt: v.optional(v.number()),
+    createdAt: v.number(),
+  }).index("by_type", ["type"])
+    .index("by_severity", ["severity"])
+    .index("by_resolved", ["resolved"])
+    .index("by_created_at", ["createdAt"]),
+
+  // Admin security logs - tracks all login attempts, failures, and suspicious activity
+  adminSecurity: defineTable({
+    type: v.string(), // "failed_login", "successful_login", "lockout", "ip_mismatch", "logout"
+    clientId: v.string(), // IP address or unique identifier
+    ipAddress: v.string(),
+    userAgent: v.string(),
+    createdAt: v.number(),
+    data: v.string(), // JSON stringified additional data
+  }).index("by_type", ["type"])
+    .index("by_client_id", ["clientId"])
+    .index("by_ip", ["ipAddress"])
+    .index("by_created_at", ["createdAt"]),
+
+  // Admin sessions - secure session management
+  adminSessions: defineTable({
+    sessionToken: v.string(),
+    clientId: v.string(),
+    ipAddress: v.string(),
+    userAgent: v.string(),
+    createdAt: v.number(),
+    expiresAt: v.number(),
+    isActive: v.boolean(),
+  }).index("by_session_token", ["sessionToken"])
+    .index("by_client_id", ["clientId"])
+    .index("by_expires_at", ["expiresAt"])
+    .index("by_active", ["isActive"]),
 });

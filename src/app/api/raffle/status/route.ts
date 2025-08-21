@@ -13,24 +13,40 @@ export async function GET() {
 
     const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL);
     
-    // Get raffle status from Convex
-    const raffleStatus = await convex.query(api.raffleWinner.getRaffleStatus);
+    // Get raffle configuration
+    const raffleConfig = await convex.query(api.payments.getRaffleConfig);
+    
+    if (!raffleConfig) {
+      return NextResponse.json({
+        error: "No active raffle found"
+      }, { status: 404 });
+    }
 
-    // Normalize and guarantee JSON shape with safe defaults
+    // Check if there's a winner
+    const currentWinner = await convex.query(api.winnerSelection.getCurrentWinner);
+    
+    // Get entry count to determine participant numbers
+    const entries = await convex.query(api.entries.getAllEntries, { limit: 1000 });
+    const completedEntries = entries?.entries?.filter(e => e.paymentStatus === "completed") || [];
+    const uniqueParticipants = new Set(completedEntries.map(e => e.email)).size;
+
+    // Calculate status
     const now = Date.now();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const rs: any = raffleStatus ?? {};
-    const endDate = Number(rs.endDate ?? now);
-    const hasEnded = Boolean(rs.hasEnded ?? endDate <= now);
-    const hasWinner = Boolean(rs.hasWinner ?? false);
-    const totalUniqueLeads = Number(rs.totalUniqueLeads ?? 0);
+    const startDate = raffleConfig.startDate || now;
+    const endDate = raffleConfig.endDate || (now + 86400000); // Default to 1 day from now
+    const hasEnded = now > endDate;
+    const hasWinner = !!currentWinner;
     const timeRemaining = Math.max(0, endDate - now);
 
     return NextResponse.json({
-      hasEnded,
+      startDate,
       endDate,
+      currentTime: now,
+      hasEnded,
       hasWinner,
-      totalUniqueLeads,
+      winnerEmail: currentWinner?.winnerEmail || null,
+      winnerSelectedAt: currentWinner?.selectedAt || null,
+      totalUniqueLeads: uniqueParticipants,
       timeRemaining,
     });
   } catch (error) {

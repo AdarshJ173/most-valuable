@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Mobile Debug - Raffle System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .debug-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .info-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .info-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #fbbf24;
+        }
+        
+        .info-item {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        
+        .test-button {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            width: 100%;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        .test-button:active {
+            transform: translateY(0);
+        }
+        
+        .status {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .status.success {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+        
+        .status.error {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+        
+        @media (max-width: 480px) {
+            .debug-container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-container">
+        <h1>🔧 Mobile Debug Tool</h1>
+        
+        <div class="info-section">
+            <div class="info-title">Device Information</div>
+            <div class="info-item">Screen: <span id="screen-size"></span></div>
+            <div class="info-item">Viewport: <span id="viewport-size"></span></div>
+            <div class="info-item">User Agent: <span id="user-agent"></span></div>
+            <div class="info-item">Mobile: <span id="is-mobile"></span></div>
+            <div class="info-item">Touch: <span id="has-touch"></span></div>
+        </div>
+        
+        <div class="info-section">
+            <div class="info-title">Browser Capabilities</div>
+            <div class="info-item">Local Storage: <span id="local-storage"></span></div>
+            <div class="info-item">Session Storage: <span id="session-storage"></span></div>
+            <div class="info-item">Cookies: <span id="cookies"></span></div>
+            <div class="info-item">Fetch API: <span id="fetch-api"></span></div>
+        </div>
+        
+        <button class="test-button" onclick="testCheckoutFlow()">
+            🛒 Test Checkout Flow
+        </button>
+        
+        <button class="test-button" onclick="testStripeRedirect()">
+            💳 Test Stripe Redirect
+        </button>
+        
+        <button class="test-button" onclick="testViewport()">
+            📱 Test Viewport Settings
+        </button>
+        
+        <div id="test-status" class="status" style="display: none;"></div>
+    </div>
+
+    <script>
+        // Initialize device information
+        function initializeDeviceInfo() {
+            document.getElementById('screen-size').textContent = 
+                `${screen.width}x${screen.height}`;
+            document.getElementById('viewport-size').textContent = 
+                `${window.innerWidth}x${window.innerHeight}`;
+            document.getElementById('user-agent').textContent = 
+                navigator.userAgent.substring(0, 60) + '...';
+            document.getElementById('is-mobile').textContent = 
+                /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'Yes' : 'No';
+            document.getElementById('has-touch').textContent = 
+                'ontouchstart' in window ? 'Yes' : 'No';
+            document.getElementById('local-storage').textContent = 
+                typeof(Storage) !== "undefined" ? 'Yes' : 'No';
+            document.getElementById('session-storage').textContent = 
+                typeof(sessionStorage) !== "undefined" ? 'Yes' : 'No';
+            document.getElementById('cookies').textContent = 
+                navigator.cookieEnabled ? 'Yes' : 'No';
+            document.getElementById('fetch-api').textContent = 
+                typeof(fetch) !== "undefined" ? 'Yes' : 'No';
+        }
+
+        // Show status message
+        function showStatus(message, type = 'info') {
+            const status = document.getElementById('test-status');
+            status.style.display = 'block';
+            status.className = `status ${type}`;
+            status.innerHTML = message;
+        }
+
+        // Test checkout flow
+        async function testCheckoutFlow() {
+            showStatus('🔄 Testing checkout flow...', 'info');
+            
+            try {
+                const testData = {
+                    quantity: 1,
+                    email: 'test@example.com',
+                    phone: '+1234567890'
+                };
+
+                const response = await fetch('/api/checkout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(testData)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    showStatus(`✅ Checkout API working!\n\nResponse:\n${JSON.stringify(data, null, 2)}`, 'success');
+                } else {
+                    const error = await response.text();
+                    showStatus(`❌ Checkout API failed (${response.status}):\n${error}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`❌ Network error:\n${error.message}`, 'error');
+            }
+        }
+
+        // Test Stripe redirect behavior
+        function testStripeRedirect() {
+            showStatus('🔄 Testing Stripe redirect behavior...', 'info');
+            
+            const testUrl = 'https://checkout.stripe.com/pay/test_redirect';
+            const isMobile = window.innerWidth <= 768 || /Mobi|Android/i.test(navigator.userAgent);
+            
+            let message = `Device Type: ${isMobile ? 'Mobile' : 'Desktop'}\n`;
+            message += `Viewport: ${window.innerWidth}x${window.innerHeight}\n`;
+            message += `Screen: ${screen.width}x${screen.height}\n\n`;
+            
+            if (isMobile) {
+                message += '📱 Mobile optimized redirect will be used\n';
+                message += '⏱️ 100ms delay will be added before redirect\n\n';
+            } else {
+                message += '💻 Standard redirect will be used\n\n';
+            }
+            
+            message += '⚠️ Note: This is a test URL and will not work\n';
+            message += 'In production, use actual Stripe checkout URLs';
+            
+            showStatus(message, 'success');
+        }
+
+        // Test viewport settings
+        function testViewport() {
+            showStatus('🔄 Testing viewport settings...', 'info');
+            
+            const viewport = document.querySelector('meta[name="viewport"]');
+            let message = '';
+            
+            if (viewport) {
+                message += `✅ Viewport meta tag found:\n${viewport.content}\n\n`;
+            } else {
+                message += `❌ No viewport meta tag found!\n`;
+                message += `This could cause mobile display issues.\n\n`;
+            }
+            
+            message += `Current viewport: ${window.innerWidth}x${window.innerHeight}\n`;
+            message += `Device pixel ratio: ${window.devicePixelRatio}\n`;
+            message += `Orientation: ${window.innerWidth > window.innerHeight ? 'Landscape' : 'Portrait'}\n\n`;
+            
+            // Check for common mobile issues
+            if (document.body.scrollWidth > window.innerWidth) {
+                message += `⚠️ Horizontal overflow detected\n`;
+            } else {
+                message += `✅ No horizontal overflow\n`;
+            }
+            
+            showStatus(message, viewport ? 'success' : 'error');
+        }
+
+        // Update viewport info on resize
+        window.addEventListener('resize', () => {
+            document.getElementById('viewport-size').textContent = 
+                `${window.innerWidth}x${window.innerHeight}`;
+        });
+
+        // Initialize on load
+        window.addEventListener('load', initializeDeviceInfo);
+    </script>
+</body>
+</html>

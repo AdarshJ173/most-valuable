@@ -6,7 +6,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const quantity = Number(body?.quantity ?? 0);
-    const email = typeof body?.email === "string" ? body.email : undefined;
+    let email = typeof body?.email === "string" ? body.email : undefined;
     const phone = typeof body?.phone === "string" ? body.phone : undefined;
 
     if (!Number.isFinite(quantity) || quantity <= 0) {
@@ -21,10 +21,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Convex URL not configured" }, { status: 500 });
     }
 
-    if (!email) {
-      return NextResponse.json({ error: "Email is required" }, { status: 400 });
-    }
-
     const origin = (typeof req.headers.get === "function" && req.headers.get("origin")) || process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
     const ipAddress =
       (typeof req.headers.get === "function" && (req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || req.headers.get("x-real-ip"))) ||
@@ -34,9 +30,15 @@ export async function POST(req: Request) {
 
     const isBundle = quantity === 5; // UI currently offers 1 or 5
 
+    // TEMP workaround: Convex deployment still requires email; synthesize if absent
+    if (!email) {
+      const ts = Date.now();
+      email = `guest+${ts}@example.com`;
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result = await convex.action((api as unknown as any).stripeActions.createCheckoutSession, {
-      email: email.toLowerCase(),
+      email: email?.toLowerCase(),
       phone,
       count: quantity,
       bundle: isBundle,
@@ -46,8 +48,9 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ url: result.url });
-  } catch {
-    return NextResponse.json({ error: "Bad request" }, { status: 400 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err ?? "Bad request");
+    return NextResponse.json({ error: message }, { status: 400 });
   }
 }
 

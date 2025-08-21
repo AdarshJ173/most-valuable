@@ -1,5 +1,6 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+import { api } from "./_generated/api";
 
 /**
  * Add a new lead to the database
@@ -46,13 +47,36 @@ export const addLead = mutation({
       }
     }
 
-    return await ctx.db.insert("leads", { 
+    const now = Date.now();
+    
+    // Create the lead
+    const leadId = await ctx.db.insert("leads", { 
       email: email.toLowerCase(), 
       phone, 
       source: source || "website",
       ipAddress,
-      createdAt: Date.now() 
+      createdAt: now
     });
+
+    // Also create a free raffle entry for the lead
+    try {
+      await ctx.runMutation(api.entries.addEntries, {
+        email: email.toLowerCase(),
+        phone,
+        count: 1,
+        amount: 0, // Free entry
+        paymentStatus: "completed",
+        ipAddress,
+        bundle: false
+      });
+      console.log(`✅ Created free raffle entry for ${email.toLowerCase()}`);
+    } catch (entryError) {
+      // Log error but don't fail the lead creation
+      console.error(`Failed to create free entry for ${email}:`, entryError);
+      // Still return the lead ID since lead was created successfully
+    }
+
+    return leadId;
   },
 });
 

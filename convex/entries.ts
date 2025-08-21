@@ -29,9 +29,9 @@ export const addEntries = mutation({
       throw new Error("Invalid entry count. Must be between 1 and 100.");
     }
 
-    // Validate amount (must be positive)
-    if (args.amount <= 0) {
-      throw new Error("Invalid amount. Must be positive.");
+    // Validate amount (must be non-negative, 0 allowed for free entries)
+    if (args.amount < 0) {
+      throw new Error("Invalid amount. Must be non-negative.");
     }
 
     // Check if raffle is still active
