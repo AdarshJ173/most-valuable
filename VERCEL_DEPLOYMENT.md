@@ -20,30 +20,28 @@ All build errors have been fixed! The application is now ready for Vercel deploy
 
 ### 2. Configure Environment Variables
 
-In your Vercel dashboard, add these environment variables:
+⚠️ **IMPORTANT**: Add these environment variables in your Vercel project dashboard BEFORE creating the deployment.
+
+Go to your Vercel project → Settings → Environment Variables and add:
 
 #### Required Variables:
-```
-NEXT_PUBLIC_CONVEX_URL=your_convex_deployment_url
-CONVEX_DEPLOY_KEY=your_convex_deploy_key
-STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_your_stripe_publishable_key
-STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
-ADMIN_TOKEN=mvr-admin-ultra-secure-2025-f8e9d2c1a3b4567890abcdef
-```
+- `NEXT_PUBLIC_CONVEX_URL` = `your_convex_deployment_url`
+- `CONVEX_DEPLOY_KEY` = `your_convex_deploy_key`  
+- `STRIPE_SECRET_KEY` = `sk_test_your_stripe_secret_key`
+- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` = `pk_test_your_stripe_publishable_key`
+- `STRIPE_WEBHOOK_SECRET` = `whsec_your_webhook_secret`
+- `ADMIN_TOKEN` = `mvr-admin-ultra-secure-2025-f8e9d2c1a3b4567890abcdef`
 
 #### Production URLs:
-```
-NODE_ENV=production
-NEXT_PUBLIC_SITE_URL=https://your-domain.vercel.app
-```
+- `NODE_ENV` = `production`
+- `NEXT_PUBLIC_SITE_URL` = `https://your-domain.vercel.app` (update after deployment)
 
 #### Optional (but recommended):
-```
-SENDGRID_API_KEY=your_sendgrid_api_key
-FROM_EMAIL=noreply@mostvaluableco.com
-NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=GA_MEASUREMENT_ID
-```
+- `SENDGRID_API_KEY` = `your_sendgrid_api_key`
+- `FROM_EMAIL` = `noreply@mostvaluableco.com`
+- `NEXT_PUBLIC_GOOGLE_ANALYTICS_ID` = `GA_MEASUREMENT_ID`
+
+💡 **Tip**: Set these for all environments (Production, Preview, Development) or just Production initially.
 
 ### 3. Build Settings
 Vercel will automatically detect Next.js, but if needed:

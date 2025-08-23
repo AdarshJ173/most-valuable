@@ -8,11 +8,6 @@
       "maxDuration": 30
     }
   },
-  "env": {
-    "NEXT_PUBLIC_CONVEX_URL": "@convex_url",
-    "STRIPE_SECRET_KEY": "@stripe_secret_key",
-    "STRIPE_WEBHOOK_SECRET": "@stripe_webhook_secret"
-  },
   "headers": [
     {
       "source": "/api/(.*)",
