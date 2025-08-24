@@ -80,7 +80,7 @@ export default function Home() {
     <div className="relative min-h-screen w-full overflow-hidden">
       {/* Background video */}
       <video
-        className="absolute inset-0 h-full w-full object-cover"
+        className="absolute inset-0 h-full w-full object-cover scale-[1.45] object-[15%_10%] sm:scale-100 sm:object-center"
         src="/IMG_7627.mp4"
         autoPlay
         loop

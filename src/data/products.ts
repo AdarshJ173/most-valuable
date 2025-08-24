@@ -4,6 +4,7 @@ export type Product = {
   slug: string;
   status: "sold_out" | "coming_soon" | "available";
   category: "tee" | "bag" | "hoodie" | "slides" | string;
+  price?: string;
   variants?: Array<{ id: string; color: string; media: string[] }>;
   media?: string[];
 };
@@ -31,6 +32,7 @@ export const products: Product[] = [
     "slug": "most-valuable-box-logo-hoodie",
     "status": "coming_soon",
     "category": "hoodie",
+    "price": "$1000",
     "media": ["/media/6Most Valuable box Logo Hoodie1.jpeg"]
   },
   {
@@ -39,7 +41,8 @@ export const products: Product[] = [
     "slug": "mv-traditional-hoodie",
     "status": "coming_soon",
     "category": "hoodie",
-    "media": ["/media/7MV traditional Hoodie .jpeg"]
+    "price": "$1000",
+    "media": ["/Hoodie.png"]
   },
   // Rest of the products
   {
@@ -48,6 +51,7 @@ export const products: Product[] = [
     "slug": "a-valuable-shirt-black",
     "status": "sold_out",
     "category": "tee",
+    "price": "$250",
     "media": ["/media/1A Valuable Shirt-b1.png", "/media/2A Valuable Shirt-b2.png"]
   },
   {
@@ -56,6 +60,7 @@ export const products: Product[] = [
     "slug": "a-valuable-shirt-white",
     "status": "sold_out",
     "category": "tee",
+    "price": "$250",
     "media": ["/media/1A Valuable Shirt-w1.png", "/media/2A Valuable Shirt2.png"]
   },
   {
@@ -64,6 +69,7 @@ export const products: Product[] = [
     slug: "members-only-tee-black",
     status: "sold_out",
     category: "tee",
+    price: "$250",
     // default media (black) if no variant selected
     media: ["/media/3A Valuable Shirt-memb1.jpeg"],
     variants: [
@@ -77,6 +83,7 @@ export const products: Product[] = [
     "slug": "mv-camo-backpack",
     "status": "sold_out",
     "category": "bag",
+    "price": "$300",
     "media": ["/media/4MV camo backpack1.png", "/media/4MV camo backpack2.jpeg"]
   },
   {
@@ -85,6 +92,7 @@ export const products: Product[] = [
     "slug": "mv-camo-duffel",
     "status": "sold_out",
     "category": "bag",
+    "price": "$1200",
     "media": ["/media/5MV camo Duffel.jpeg"]
   },
   {
@@ -93,6 +101,7 @@ export const products: Product[] = [
     "slug": "mv-camo-slides",
     "status": "sold_out",
     "category": "slides",
+    "price": "$150",
     "media": ["/media/8MV camo slides.MOV"]
   }
 ];

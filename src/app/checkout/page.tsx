@@ -257,10 +257,10 @@ function CheckoutPageContent() {
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-semibold">
-                    {isBundle ? "4 Raffle Entries" : `${quantity} Raffle Entry${quantity > 1 ? 's' : ''}`}
+                    {isBundle ? "4 Entries" : `${quantity} Entry${quantity > 1 ? 's' : ''}`}
                   </h3>
                   <p className="text-sm text-slate-300">
-                    Most Valuable Holiday Collection
+                    Gold Rush collection
                   </p>
                   {/* Product Selection Details */}
                   {(selectedColor || selectedSize) && (

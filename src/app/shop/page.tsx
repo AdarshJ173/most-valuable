@@ -102,7 +102,7 @@ export default function ShopPage() {
     <main className="relative min-h-screen overflow-hidden bg-white text-black">
       {/* Background set to pure white (gradient removed) */}
 
-      <section className="relative z-10 mx-auto max-w-6xl px-6 py-14">
+      <section className="relative z-10 mx-auto max-w-6xl px-0 py-14 sm:px-6">
         <header className="mb-10">
           {/* One-line header: big logo + raffle timer */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
@@ -117,7 +117,8 @@ export default function ShopPage() {
         </header>
 
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Mobile: 2x2 grid, Desktop: 3x3 grid */}
+        <div className="grid grid-cols-2 gap-0 px-0 sm:grid-cols-3 sm:gap-4 lg:gap-6 sm:px-0">
           {products.map((p, idx) => {
             const hasVariants = !!p.variants?.length;
             const selectedId = selected[p.id];
@@ -130,11 +131,11 @@ export default function ShopPage() {
               <Link
                 href={`/product/${p.slug}`}
                 key={p.id}
-                className={`group relative block rounded-xl border border-gray-200 bg-white text-black p-5 shadow-md transition duration-300 will-change-transform hover:-translate-y-1 hover:shadow-lg focus-within:shadow-lg animate-fade-up animate-delay-${(idx % 5) + 1}`}
+                className={`group relative block rounded-none p-2 sm:rounded-xl sm:border sm:border-gray-200 sm:bg-white text-black sm:p-5 sm:shadow-md transition duration-300 will-change-transform sm:hover:-translate-y-1 sm:hover:shadow-lg sm:focus-within:shadow-lg animate-fade-up animate-delay-${(idx % 5) + 1}`}
               >
                 <div className="relative">
                   <div className="block">
-                    <div className={`relative aspect-[3/4] w-full overflow-hidden rounded-lg ${(["raffle","p1b","p1w","p3","p4","p5","p8"].includes(p.id) || idx >= 6) ? "bg-white" : "bg-gray-100"} ring-1 ring-gray-200`}>
+                    <div className={`relative aspect-[1/1] sm:aspect-[3/4] w-full overflow-hidden rounded-none bg-transparent ring-0 sm:rounded-lg ${(["raffle","p1b","p1w","p3","p4","p5","p7","p8"].includes(p.id) || idx >= 6) ? "sm:bg-white" : "sm:bg-gray-100"} sm:ring-1 sm:ring-gray-200`}>
                       {/* Sliding track */}
                       <div
                         className="absolute inset-0 flex transition-transform duration-500 ease-out will-change-transform"
@@ -147,16 +148,20 @@ export default function ShopPage() {
                               alt={p.name}
                               className={
                                 p.id === "raffle"
-                                  ? "scale-[1.2] md:scale-[1.3]"
+                                  ? "scale-[1.7] md:scale-[1.3] object-[50%_60%] sm:object-center"
                                   : p.id === "p6"
-                                  ? "scale-[1.3] md:scale-[1.4]"
+                                  ? "scale-[1.7] md:scale-[1.4]"
                                   : p.id === "p7"
-                                  ? "scale-[1.3] md:scale-[1.4]"
-                                  : p.id === "p3" || p.id === "p4"
-                                  ? "scale-[1.25] md:scale-[1.35]"
+                                  ? "scale-[1.7] md:scale-[1.4] object-[60%_50%]"
+                                  : p.id === "p3"
+                                  ? "scale-[2.1] md:scale-[1.35] object-[50%_60%] sm:object-center"
+                                  : p.id === "p4"
+                                  ? "scale-[1.3] md:scale-[1.35]"
                                   : ["p5","p8"].includes(p.id)
-                                  ? "scale-[1.2] md:scale-[1.3]"
-                                  : ""
+                                  ? "scale-[1.6] md:scale-[1.3]"
+                                  : ["p1b","p1w"].includes(p.id)
+                                  ? "scale-[1.1] sm:scale-100"
+                                  : "scale-[1.7] sm:scale-100"
                               }
                             />
                           </div>
@@ -197,15 +202,20 @@ export default function ShopPage() {
                   )}
                 </div>
 
-                <div className="mt-4 flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-medium underline-offset-2 group-hover:underline">{p.name}</h3>
+                <div className="mt-1 flex flex-col items-center text-center sm:mt-4">
+                  <div className="flex flex-col items-center sm:items-center w-full">
+                    <h3 className="text-xs font-medium sm:text-lg underline-offset-2 group-hover:underline text-center">{p.name}</h3>
+                    {/* Show price for sold out and coming soon items with faded styling */}
+                    {p.price && p.status !== "available" && (
+                      <span className="text-xs sm:text-sm text-gray-400 opacity-60 mt-1">{p.price}</span>
+                    )}
                   </div>
-                  <StatusBadge status={p.status} />
+                  <div className="mt-2 sm:mt-3"><StatusBadge status={p.status} /></div>
                 </div>
 
+                {/* Hide variants on mobile for cleaner look */}
                 {hasVariants && p.id !== "raffle" && (
-                  <div className="mt-3 flex gap-2">
+                  <div className="hidden sm:flex mt-3 gap-2">
                     {p.variants!.map((v) => (
                       <button
                         key={v.id}
@@ -223,28 +233,101 @@ export default function ShopPage() {
                 )}
 
                 {p.status === "available" && (
-                  <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setLoadingQty(1);
-                        handleBuyClick(1);
-                      }}
-                      className="rounded-full bg-black px-5 py-3 text-sm font-medium text-white transition hover:bg-black/90"
-                    >
-                      {loadingQty === 1 ? "Redirecting…" : "+1 entry — $50"}
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setLoadingQty(4);
-                        handleBuyClick(4);
-                      }}
-                      className="rounded-full border border-gray-300 bg-gray-100 px-5 py-3 text-sm font-medium text-black transition hover:bg-gray-200"
-                    >
-                      {loadingQty === 4 ? "Redirecting…" : "+4 entries — $100"}
-                    </button>
-                  </div>
+                  p.id === "raffle" ? (
+                    <>
+                      {/* Mobile: tag-style pricing options */}
+                      <div className="mt-3 sm:hidden flex justify-center gap-2">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setLoadingQty(1);
+                            handleBuyClick(1);
+                          }}
+                          className="rounded-full border border-gray-300 bg-black text-white px-3 py-1.5 text-xs font-medium transition hover:bg-black/90 active:scale-95"
+                        >
+                          {loadingQty === 1 ? "Loading..." : "+1 — $50"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setLoadingQty(4);
+                            handleBuyClick(4);
+                          }}
+                          className="rounded-full border border-gray-300 bg-gray-100 text-black px-3 py-1.5 text-xs font-medium transition hover:bg-gray-200 active:scale-95"
+                        >
+                          {loadingQty === 4 ? "Loading..." : "+4 — $100"}
+                        </button>
+                      </div>
+                      {/* Desktop/tablet: keep two buttons */}
+                      <div className="hidden sm:mt-4 sm:grid sm:grid-cols-2 sm:gap-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setLoadingQty(1);
+                            handleBuyClick(1);
+                          }}
+                          className="rounded-full bg-black px-5 py-3 text-sm font-medium text-white transition hover:bg-black/90"
+                        >
+                          {loadingQty === 1 ? "Redirecting…" : "+1 entry — $50"}
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setLoadingQty(4);
+                            handleBuyClick(4);
+                          }}
+                          className="rounded-full border border-gray-300 bg-gray-100 px-5 py-3 text-sm font-medium text-black transition hover:bg-gray-200"
+                        >
+                          {loadingQty === 4 ? "Redirecting…" : "+4 entries — $100"}
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      {/* Mobile: simple hyperlink-like CTA for other products too */}
+                      <div className="mt-3 sm:hidden flex justify-center">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setLoadingQty(1);
+                            handleBuyClick(1);
+                          }}
+                          className="text-black underline text-sm font-medium"
+                        >
+                          Buy -&gt;
+                        </button>
+                      </div>
+                      {/* Desktop: keep two buttons */}
+                      <div className="hidden sm:mt-4 sm:grid sm:grid-cols-2 sm:gap-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setLoadingQty(1);
+                            handleBuyClick(1);
+                          }}
+                          className="rounded-full bg-black px-5 py-3 text-sm font-medium text-white transition hover:bg-black/90"
+                        >
+                          {loadingQty === 1 ? "Redirecting…" : "+1 entry — $50"}
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setLoadingQty(4);
+                            handleBuyClick(4);
+                          }}
+                          className="rounded-full border border-gray-300 bg-gray-100 px-5 py-3 text-sm font-medium text-black transition hover:bg-gray-200"
+                        >
+                          {loadingQty === 4 ? "Redirecting…" : "+4 entries — $100"}
+                        </button>
+                      </div>
+                    </>
+                  )
                 )}
 
               </Link>

@@ -92,7 +92,7 @@ export default function ProductDetail({ params }: { params: Promise<{ slug: stri
           <div>
             <div className="relative w-full aspect-square rounded-xl bg-white ring-1 ring-gray-200 overflow-hidden">
               {activeImage && (
-                <Media src={activeImage} alt={product.name} className="object-contain" />
+                <Media src={activeImage} alt={product.name} className={`object-contain ${product.id === "p7" ? "scale-[1.3] md:scale-[1.4] object-[60%_50%]" : ""}`} />
               )}
             </div>
             {/* Thumbs */}
@@ -107,7 +107,7 @@ export default function ProductDetail({ params }: { params: Promise<{ slug: stri
                       className={`relative aspect-square w-full rounded-lg ring-1 ${activeImage===url?"ring-black":"ring-gray-200"} overflow-hidden bg-gray-100`}
                       onClick={() => setActiveImage(url)}
                     >
-                      <Media src={url} alt={`${product.name} ${i+1}`} className="object-cover" />
+                      <Media src={url} alt={`${product.name} ${i+1}`} className={`object-cover ${product.id === "p7" ? "scale-[1.3] md:scale-[1.4] object-[60%_60%]" : ""}`} />
                     </button>
                     {showLabel && (
                       <span className="mt-1 text-xs text-gray-600">{label}</span>
