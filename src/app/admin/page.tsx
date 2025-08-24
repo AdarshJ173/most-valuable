@@ -474,75 +474,127 @@ export default function UltraSecureAdminDashboard() {
 
         {/* SECURITY LOGS */}
         {activeTab === "security" && (
-          <div className="bg-gray-800 p-6 rounded-lg">
-            <h3 className="text-xl font-bold mb-6">🔒 FORENSIC SECURITY AUDIT LOGS</h3>
+          <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">Security Logs</h3>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-gray-400 border-b-2 border-gray-700">
-                    <th className="text-left py-4">🚨 Event Type</th>
-                    <th className="text-left py-4">🌍 IP Address</th>
-                    <th className="text-left py-4">🖥️ User Agent</th>
-                    <th className="text-left py-4">📅 Timestamp</th>
-                    <th className="text-left py-4">📋 Details</th>
+                  <tr className="text-gray-500 border-b-2 border-gray-200">
+                    <th className="text-left py-4 font-medium">Event Type</th>
+                    <th className="text-left py-4 font-medium">IP Address</th>
+                    <th className="text-left py-4 font-medium">User Agent</th>
+                    <th className="text-left py-4 font-medium">Timestamp</th>
+                    <th className="text-left py-4 font-medium">Details</th>
                   </tr>
                 </thead>
                 <tbody>
                   {securityLogs?.map((log) => (
-                    <tr key={log._id} className="border-b border-gray-700">
+                    <tr key={log._id} className="border-b border-gray-100 hover:bg-gray-50">
                       <td className="py-4">
-                        <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                          log.type === "successful_login" ? "bg-green-500/30 text-green-300" :
-                          log.type === "failed_login" ? "bg-red-500/30 text-red-300" :
-                          log.type === "lockout" ? "bg-red-600/30 text-red-200" :
-                          "bg-yellow-500/30 text-yellow-300"
+                        <span className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded-full ${
+                          log.type === "successful_login" ? "bg-green-100 text-green-800" :
+                          log.type === "failed_login" ? "bg-red-100 text-red-800" :
+                          log.type === "lockout" ? "bg-red-100 text-red-800" :
+                          "bg-yellow-100 text-yellow-800"
                         }`}>
                           {log.type.replace('_', ' ').toUpperCase()}
                         </span>
                       </td>
-                      <td className="py-4 font-mono text-xs">{log.ipAddress}</td>
-                      <td className="py-4 text-xs">{log.userAgent.substring(0, 30)}...</td>
-                      <td className="py-4">{new Date(log.createdAt).toLocaleString()}</td>
-                      <td className="py-4 text-xs">{JSON.parse(log.data || "{}").reason || "N/A"}</td>
+                      <td className="py-4 font-mono text-xs text-gray-600">{log.ipAddress}</td>
+                      <td className="py-4 text-xs text-gray-600">{log.userAgent.substring(0, 40)}...</td>
+                      <td className="py-4 text-gray-500">{new Date(log.createdAt).toLocaleString()}</td>
+                      <td className="py-4 text-xs text-gray-500">{JSON.parse(log.data || "{}").reason || "N/A"}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+              {(!securityLogs || securityLogs.length === 0) && (
+                <div className="text-center py-8 text-gray-500">
+                  No security logs available.
+                </div>
+              )}
             </div>
           </div>
         )}
 
         {/* ORDERS */}
         {activeTab === "orders" && (
-          <div className="bg-gray-800 p-6 rounded-lg">
-            <h3 className="text-xl font-bold mb-6">💰 SECURE ORDER MANAGEMENT</h3>
+          <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">Order Management</h3>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-gray-400 border-b-2 border-gray-700">
-                    <th className="text-left py-4">👤 Customer</th>
-                    <th className="text-left py-4">🎫 Tickets</th>
-                    <th className="text-left py-4">💰 Amount</th>
-                    <th className="text-left py-4">📊 Status</th>
-                    <th className="text-left py-4">📅 Date</th>
+                  <tr className="text-gray-500 border-b-2 border-gray-200">
+                    <th className="text-left py-4 font-medium">Customer</th>
+                    <th className="text-left py-4 font-medium">Product Details</th>
+                    <th className="text-left py-4 font-medium">Entries</th>
+                    <th className="text-left py-4 font-medium">Amount</th>
+                    <th className="text-left py-4 font-medium">Status</th>
+                    <th className="text-left py-4 font-medium">Date</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {completedEntries.slice(0, 10).map((entry) => (
-                    <tr key={entry._id} className="border-b border-gray-700">
-                      <td className="py-4">{entry.email}</td>
-                      <td className="py-4 font-bold text-blue-400">{entry.count}</td>
-                      <td className="py-4 font-bold text-green-400">${(entry.amount / 100).toFixed(2)}</td>
+                  {completedEntries.slice(0, 20).map((entry) => (
+                    <tr key={entry._id} className="border-b border-gray-100 hover:bg-gray-50">
                       <td className="py-4">
-                        <span className="bg-green-500/30 text-green-300 px-2 py-1 rounded-full text-xs font-bold">
+                        <div>
+                          <div className="font-medium text-gray-900">{entry.email}</div>
+                          {entry.phone && (
+                            <div className="text-xs text-gray-500">{entry.phone}</div>
+                          )}
+                        </div>
+                      </td>
+                      <td className="py-4">
+                        <div className="space-y-1">
+                          {entry.productName ? (
+                            <div className="font-medium text-gray-900">{entry.productName}</div>
+                          ) : (
+                            <div className="font-medium text-gray-900">Holiday Collection</div>
+                          )}
+                          <div className="flex gap-3 text-xs text-gray-600">
+                            {entry.variantColor && (
+                              <span className="bg-gray-100 px-2 py-1 rounded">Color: {entry.variantColor}</span>
+                            )}
+                            {entry.size && (
+                              <span className="bg-gray-100 px-2 py-1 rounded">Size: {entry.size}</span>
+                            )}
+                          </div>
+                          {entry.bundle && (
+                            <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+                              Bundle Deal
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="py-4">
+                        <span className="font-semibold text-gray-900">{entry.count}</span>
+                        <span className="text-xs text-gray-500 ml-1">tickets</span>
+                      </td>
+                      <td className="py-4">
+                        <span className="font-semibold text-gray-900">${(entry.amount / 100).toFixed(2)}</span>
+                      </td>
+                      <td className="py-4">
+                        <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
                           {entry.paymentStatus.toUpperCase()}
                         </span>
                       </td>
-                      <td className="py-4">{new Date(entry.createdAt).toLocaleDateString()}</td>
+                      <td className="py-4 text-gray-500">
+                        {new Date(entry.createdAt).toLocaleDateString()}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+              {completedEntries.length === 0 && (
+                <div className="text-center py-8 text-gray-500">
+                  No completed orders yet.
+                </div>
+              )}
+              {completedEntries.length > 20 && (
+                <div className="mt-4 text-center text-gray-500 text-sm">
+                  Showing latest 20 orders. Total: {completedEntries.length} orders.
+                </div>
+              )}
             </div>
           </div>
         )}

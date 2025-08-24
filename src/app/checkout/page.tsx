@@ -199,7 +199,7 @@ function CheckoutPageContent() {
       if (error instanceof Error) {
         if (error.message.includes('fetch')) {
           errorMessage = "Unable to connect to payment system. Please check your internet connection and try again.";
-        } else if (error.message.includes('raffle')) {
+        } else if (error.message.includes('entry')) {
           errorMessage = error.message;
         } else {
           errorMessage = error.message || errorMessage;
@@ -212,21 +212,7 @@ function CheckoutPageContent() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden text-white">
-      {/* Background */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          backgroundImage:
-            "radial-gradient(800px at 15% 10%, rgba(255, 0, 128, 0.28), transparent 60%)," +
-            "radial-gradient(700px at 85% 15%, rgba(0, 200, 255, 0.25), transparent 60%)," +
-            "radial-gradient(700px at 20% 85%, rgba(255, 200, 0, 0.22), transparent 60%)," +
-            "radial-gradient(900px at 90% 85%, rgba(100, 255, 150, 0.20), transparent 60%)," +
-            "linear-gradient(180deg, #0b0f1a 0%, #0d0c1f 40%, #111827 100%)",
-          backgroundBlendMode: "screen, screen, screen, screen, normal",
-        }}
-      />
+    <main className="relative min-h-screen overflow-hidden text-white bg-black">
 
       <div className="relative z-10 min-h-screen flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-lg">
@@ -246,7 +232,7 @@ function CheckoutPageContent() {
               Almost There!
             </h1>
             <p className="text-slate-300 text-sm">
-              Just need a few details to complete your raffle entry
+              Just need a few details to complete your Gold Rush collection entry
             </p>
           </div>
 
@@ -323,7 +309,7 @@ function CheckoutPageContent() {
                       Why do we need your email?
                     </h4>
                     <p className="text-sm text-slate-300 leading-relaxed">
-                      We&apos;ll use your email to send you purchase confirmation, raffle updates, and most importantly - to notify you if you win! No spam, just essential raffle communications.
+                      We&apos;ll use your email to send you purchase confirmation, Gold Rush collection updates, and most importantly - to notify you if you win! No spam, just essential collection communications.
                     </p>
                   </div>
                 </div>

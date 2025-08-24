@@ -142,38 +142,40 @@ export default function ProductDetail({ params }: { params: Promise<{ slug: stri
               </div>
             ) : null}
 
-            {/* Size selector */}
-            <div className="mb-6">
-              <label className="text-sm font-medium">Size</label>
-              <select value={size} onChange={(e)=>setSize(e.target.value)} className="mt-2 w-full rounded-lg border border-gray-300 bg-white px-3 py-2">
-                {sizes.map(s=> (
-                  <option key={s} value={s}>{s}</option>
-                ))}
-              </select>
-              <details className="mt-3 rounded-lg border border-gray-200 bg-gray-50 p-3">
-                <summary className="cursor-pointer text-sm font-medium">Size chart</summary>
-                <div className="mt-2 text-xs text-gray-700">
-                  <div className="grid grid-cols-6 gap-2">
-                    <div className="font-semibold">Size</div>
-                    <div className="font-semibold">Chest (in)</div>
-                    <div className="font-semibold">Length (in)</div>
-                    <div className="font-semibold">Shoulder (in)</div>
-                    <div className="font-semibold">Sleeve (in)</div>
-                    <div className="font-semibold">Waist (in)</div>
-                    {sizes.map(s => (
-                      <div key={s} className="contents">
-                        <div>{s}</div>
-                        <div>18–24</div>
-                        <div>26–32</div>
-                        <div>16–22</div>
-                        <div>7–9</div>
-                        <div>28–38</div>
-                      </div>
-                    ))}
+            {/* Size selector - only show for tees and hoodies */}
+            {(product.category === "tee" || product.category === "hoodie") && (
+              <div className="mb-6">
+                <label className="text-sm font-medium">Size</label>
+                <select value={size} onChange={(e)=>setSize(e.target.value)} className="mt-2 w-full rounded-lg border border-gray-300 bg-white px-3 py-2">
+                  {sizes.map(s=> (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
+                <details className="mt-3 rounded-lg border border-gray-200 bg-gray-50 p-3">
+                  <summary className="cursor-pointer text-sm font-medium">Size chart</summary>
+                  <div className="mt-2 text-xs text-gray-700">
+                    <div className="grid grid-cols-6 gap-2">
+                      <div className="font-semibold">Size</div>
+                      <div className="font-semibold">Chest (in)</div>
+                      <div className="font-semibold">Length (in)</div>
+                      <div className="font-semibold">Shoulder (in)</div>
+                      <div className="font-semibold">Sleeve (in)</div>
+                      <div className="font-semibold">Waist (in)</div>
+                      {sizes.map(s => (
+                        <div key={s} className="contents">
+                          <div>{s}</div>
+                          <div>18–24</div>
+                          <div>26–32</div>
+                          <div>16–22</div>
+                          <div>7–9</div>
+                          <div>28–38</div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              </details>
-            </div>
+                </details>
+              </div>
+            )}
 
             {/* CTA */}
             {isRaffle ? (
@@ -181,7 +183,8 @@ export default function ProductDetail({ params }: { params: Promise<{ slug: stri
                 <button
                   onClick={() => {
                     const selectedColor = activeVariantId ? product.variants?.find(v => v.id === activeVariantId)?.color || 'Black' : 'Black';
-                    const checkoutUrl = `/checkout?quantity=1&productId=${product.id}&variantId=${activeVariantId || 'raffle-blk'}&color=${encodeURIComponent(selectedColor)}&size=${encodeURIComponent(size)}`;
+                    const sizeParam = (product.category === "tee" || product.category === "hoodie") ? `&size=${encodeURIComponent(size)}` : '';
+                    const checkoutUrl = `/checkout?quantity=1&productId=${product.id}&variantId=${activeVariantId || 'raffle-blk'}&color=${encodeURIComponent(selectedColor)}${sizeParam}`;
                     window.location.href = checkoutUrl;
                   }}
                   className="rounded-full bg-black px-5 py-3 text-sm font-medium text-white transition hover:bg-black/90"
@@ -191,7 +194,8 @@ export default function ProductDetail({ params }: { params: Promise<{ slug: stri
                 <button
                   onClick={() => {
                     const selectedColor = activeVariantId ? product.variants?.find(v => v.id === activeVariantId)?.color || 'Black' : 'Black';
-                    const checkoutUrl = `/checkout?quantity=4&productId=${product.id}&variantId=${activeVariantId || 'raffle-blk'}&color=${encodeURIComponent(selectedColor)}&size=${encodeURIComponent(size)}`;
+                    const sizeParam = (product.category === "tee" || product.category === "hoodie") ? `&size=${encodeURIComponent(size)}` : '';
+                    const checkoutUrl = `/checkout?quantity=4&productId=${product.id}&variantId=${activeVariantId || 'raffle-blk'}&color=${encodeURIComponent(selectedColor)}${sizeParam}`;
                     window.location.href = checkoutUrl;
                   }}
                   className="rounded-full border border-gray-300 bg-gray-100 px-5 py-3 text-sm font-medium text-black transition hover:bg-gray-200"
