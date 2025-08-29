@@ -161,6 +161,8 @@ export default function ShopPage() {
                                   ? "scale-[1.6] md:scale-[1.3]"
                                   : ["p1b","p1w"].includes(p.id)
                                   ? "scale-[1.1] sm:scale-100"
+                                  : p.id === "p9"
+                                  ? "scale-100 sm:scale-100"
                                   : "scale-[1.7] sm:scale-100"
                               }
                             />

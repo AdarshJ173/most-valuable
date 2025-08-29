@@ -103,5 +103,14 @@ export const products: Product[] = [
     "category": "slides",
     "price": "$150",
     "media": ["/media/8MV camo slides.MOV"]
+  },
+  {
+    "id": "p9",
+    "name": "MV Reversible Shorts",
+    "slug": "mv-reversible-shorts",
+    "status": "sold_out",
+    "category": "shorts",
+    "price": "$150",
+    "media": ["/MV Reversible Shorts-f.png", "/MV Reversible Shorts-b.png"]
   }
 ];
