@@ -136,9 +136,20 @@ export default function Home() {
                 >
                   {isSubmitting ? "Adding..." : "Subscribe"}
                 </button>
-                <p className="text-[10px] leading-snug text-white/70 text-center">
-                  By submitting this form and signing up for texts, you consent to receive marketing emails and text messages (e.g., promos, cart reminders) at the contact provided. Consent is not a condition of purchase. Msg & data rates may apply. Msg frequency varies. Unsubscribe anytime by replying STOP or using the unsubscribe link. <Link href="/privacy" className="underline">Privacy Policy</Link> & <Link href="/terms" className="underline">Terms</Link>.
-                </p>
+                <div className="text-center space-y-3">
+                  <div className="bg-black/30 backdrop-blur border border-white/20 rounded-lg p-4">
+                    <p className="text-yellow-300 font-semibold text-sm mb-2">🏆 Gold Rush Raffle Entry!</p>
+                    <p className="text-white/90 text-xs leading-relaxed mb-3">
+                      Subscribe for <span className="text-yellow-300 font-semibold">free entry</span> to the Gold Rush raffle—2 people have a chance to win 1 limited edition shirt!
+                    </p>
+                    <p className="text-white/80 text-xs leading-relaxed">
+                      Want extra chances to win? Purchase additional entries for <span className="text-green-300 font-semibold">$50 each</span>. Winners who also purchased additional entries will receive the first ever shirt backed by <span className="text-yellow-300 font-semibold">1/4oz of gold</span> making history as the first of its kind!
+                    </p>
+                  </div>
+                  <p className="text-[10px] text-white/60">
+                    <Link href="/privacy" className="underline hover:text-white/80 transition-colors">Privacy Policy</Link> & <Link href="/terms" className="underline hover:text-white/80 transition-colors">Terms</Link>
+                  </p>
+                </div>
               </form>
             ) : (
               <div className="text-center p-6 bg-green-500/20 backdrop-blur border border-green-400/50 rounded-xl mb-4">

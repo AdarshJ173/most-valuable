@@ -5,6 +5,7 @@ export type Product = {
   status: "sold_out" | "coming_soon" | "available";
   category: "tee" | "bag" | "hoodie" | "slides" | string;
   price?: string;
+  description?: string;
   variants?: Array<{ id: string; color: string; media: string[] }>;
   media?: string[];
 };
@@ -19,6 +20,7 @@ export const products: Product[] = [
     slug: "1-of-1-raffle-tee",
     status: "available",
     category: "tee",
+    description: "These 2 quality 9oz 1 of 1 shirts are both backed by 1/4oz of pure gold. Please allow up to 4 weeks for shipping (shirts will be custom made to order). Unlimited entries available",
     media: ["/GoldRushCollection.png"],
     variants: [
       { id: "raffle-blk", color: "Black", media: ["/mainProduct-black.png"] },

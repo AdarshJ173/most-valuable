@@ -1,6 +1,6 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
-import { api } from "./_generated/api";
+import { api, internal } from "./_generated/api";
 
 /**
  * Create a pending entry before Stripe checkout
@@ -155,6 +155,22 @@ export const handlePaymentSuccess = mutation({
     } catch (ticketError) {
       console.error('Failed to assign raffle tickets:', ticketError);
       // Don't fail the payment processing if ticket assignment fails
+    }
+
+    // Queue confirmation email for processing
+    try {
+      await ctx.runMutation(api.emailLogs.createEmailLog, {
+        to: entry.email,
+        subject: `🏆 Gold Rush Entry Confirmed - ${entry.count} ${entry.count === 1 ? 'Entry' : 'Entries'} Secured`,
+        message: 'Purchase confirmation email - queued for sending',
+        data: JSON.stringify({ entryId: entry._id, count: entry.count, type: 'purchase_confirmation' }),
+        status: 'pending',
+        sentAt: Date.now(),
+      });
+      console.log(`📅 Confirmation email queued for ${entry.email}`);
+    } catch (emailError) {
+      console.error('Failed to queue confirmation email:', emailError);
+      // Don't fail the payment processing if email queuing fails
     }
 
     // Notify admin of new order

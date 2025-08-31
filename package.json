@@ -19,6 +19,7 @@
     "react-dom": "19.1.0",
     "react-hook-form": "^7.62.0",
     "react-phone-number-input": "^3.4.12",
+    "resend": "^6.0.2",
     "stripe": "^16.12.0",
     "zod": "^4.0.17"
   },

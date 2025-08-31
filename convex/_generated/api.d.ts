@@ -14,6 +14,8 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as adminAuth from "../adminAuth.js";
+import type * as emailLogs from "../emailLogs.js";
+import type * as emailService from "../emailService.js";
 import type * as entries from "../entries.js";
 import type * as entriesNode from "../entriesNode.js";
 import type * as initDatabase from "../initDatabase.js";
@@ -39,6 +41,8 @@ import type * as winnerSelection from "../winnerSelection.js";
  */
 declare const fullApi: ApiFromModules<{
   adminAuth: typeof adminAuth;
+  emailLogs: typeof emailLogs;
+  emailService: typeof emailService;
   entries: typeof entries;
   entriesNode: typeof entriesNode;
   initDatabase: typeof initDatabase;

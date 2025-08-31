@@ -144,6 +144,16 @@ export const getEntriesByEmail = query({
 });
 
 /**
+ * Get entry by ID
+ */
+export const getEntryById = query({
+  args: { entryId: v.id("entries") },
+  handler: async (ctx, { entryId }) => {
+    return await ctx.db.get(entryId);
+  },
+});
+
+/**
  * Get all completed entries (for winner selection)
  */
 export const getCompletedEntries = query({

@@ -121,7 +121,7 @@ export default function ProductDetail({ params }: { params: Promise<{ slug: stri
           {/* Info */}
           <div>
             <h1 className="text-2xl font-semibold mb-2">{product.name}</h1>
-            <p className="text-sm text-gray-500 capitalize mb-4">{product.category}</p>
+            <p className="text-sm text-gray-700 mb-4">{product.description || product.category}</p>
 
             {product.variants?.length ? (
               <div className="mb-6">
