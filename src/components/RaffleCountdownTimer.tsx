@@ -124,7 +124,7 @@ export function RaffleCountdownTimer({ className }: { className?: string }) {
           </span>
         </div>
         <div className="text-xs bg-yellow-500/10 text-yellow-700 px-2 py-1 rounded-full">
-          Aug 31st
+          {new Date(timerStart).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
         </div>
       </div>
     );

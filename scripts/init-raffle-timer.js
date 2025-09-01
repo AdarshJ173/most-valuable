@@ -27,12 +27,12 @@ async function initRaffleTimer() {
     // Calculate dates for demo/testing
     const now = new Date();
     const startDate = new Date(now); // Start immediately
-    const endDate = new Date(now.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 days from now
+    const endDate = new Date(now.getTime() + (22 * 24 * 60 * 60 * 1000)); // 22 days from now (PRD specification)
     
     console.log('📅 Raffle Timeline:');
     console.log('   Start:', startDate.toLocaleString());
     console.log('   End:', endDate.toLocaleString());
-    console.log('   Duration: 7 days');
+    console.log('   Duration: 22 days (PRD specification)');
     
     const raffleConfig = {
       adminToken: process.env.ADMIN_TOKEN,
