@@ -20,7 +20,7 @@ export const products: Product[] = [
     slug: "1-of-1-raffle-tee",
     status: "available",
     category: "tee",
-    description: "These 2 quality 9oz 1 of 1 shirts are both backed by 1/4oz of pure gold. Please allow up to 4 weeks for shipping (shirts will be custom made to order). Unlimited entries available",
+    description: "Gold Rush Giveaway\nSubscribe for FREE to claim 1 entry into the Gold Rush Giveaway. 1 winner will receive a 1 of 1 shirt\nWant better odds? You can purchase extra entries for $50 each.\nIf the winner purchased at least one paid entry, they will receive the first-ever shirt backed by ¼ oz of real gold - making history as the first of its kind.\n\nThese 2 quality 9oz 1 of 1 shirts are both backed by 1/4oz of pure gold. Please allow up to 4 weeks for shipping (shirts will be custom made to order).\nUnlimited entries available",
     media: ["/GoldRushCollection.png"],
     variants: [
       { id: "raffle-blk", color: "Black", media: ["/mainProduct-black.png"] },
