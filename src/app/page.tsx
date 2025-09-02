@@ -138,23 +138,40 @@ export default function Home() {
 
             {/* Form */}
             {!showSuccess && !showAlreadySubscribed ? (
-              <form onSubmit={handleEmailSubmit} className="space-y-4">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"
-                  required
-                />
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full bg-white text-black px-6 py-3 rounded-xl font-semibold hover:bg-white/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? "Adding..." : "Subscribe"}
-                </button>
-              </form>
+              <>
+                <form onSubmit={handleEmailSubmit} className="space-y-4">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"
+                    required
+                  />
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full bg-white text-black px-6 py-3 rounded-xl font-semibold hover:bg-white/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isSubmitting ? "Adding..." : "Subscribe"}
+                  </button>
+                </form>
+                
+                {/* Subscription disclaimer */}
+                <div className="mt-4 text-center">
+                  <p className="text-white text-xs leading-relaxed">
+                    By submitting this form and signing up for texts, you consent to receive marketing emails and text messages (e.g., promos, cart reminders) at the contact provided. Consent is not a condition of purchase. Message & data rates may apply. Message frequency varies. Unsubscribe anytime by replying STOP or using the unsubscribe link.{" "}
+                    <Link href="/privacy" className="underline hover:text-white/80 transition-colors">
+                      Privacy Policy
+                    </Link>
+                    {" & "}
+                    <Link href="/terms" className="underline hover:text-white/80 transition-colors">
+                      Terms
+                    </Link>
+                    .
+                  </p>
+                </div>
+              </>
             ) : showSuccess ? (
               <div className="text-center p-6 bg-green-500/20 backdrop-blur border border-green-400/50 rounded-xl mb-4">
                 <div className="text-green-400 font-semibold text-lg mb-2">✅ You&apos;re In The Raffle!</div>
