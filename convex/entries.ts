@@ -34,25 +34,38 @@ export const addEntries = mutation({
       throw new Error("Invalid amount. Must be non-negative.");
     }
 
+    const normalizedEmail = args.email.toLowerCase();
+    
+    // Parallel queries for better performance
+    const queryPromises = [];
+    
     // For free entries (amount = 0), check if user already has a free entry
     if (args.amount === 0) {
-      const existingFreeEntry = await ctx.db
-        .query("entries")
-        .withIndex("by_email", (q) => q.eq("email", args.email.toLowerCase()))
-        .filter((q) => q.eq(q.field("amount"), 0))
-        .filter((q) => q.eq(q.field("paymentStatus"), "completed"))
-        .first();
-      
-      if (existingFreeEntry) {
-        throw new Error("User already has a free raffle entry. Only one free entry per email is allowed.");
-      }
+      queryPromises.push(
+        ctx.db
+          .query("entries")
+          .withIndex("by_email_amount_status", (q) => 
+            q.eq("email", normalizedEmail).eq("amount", 0).eq("paymentStatus", "completed")
+          )
+          .first()
+      );
+    } else {
+      queryPromises.push(Promise.resolve(null));
     }
-
+    
     // Check if raffle is still active
-    const activeRaffle = await ctx.db
-      .query("raffleConfig")
-      .withIndex("by_active", (q) => q.eq("isActive", true))
-      .first();
+    queryPromises.push(
+      ctx.db
+        .query("raffleConfig")
+        .withIndex("by_active", (q) => q.eq("isActive", true))
+        .first()
+    );
+    
+    const [existingFreeEntry, activeRaffle] = await Promise.all(queryPromises);
+    
+    if (args.amount === 0 && existingFreeEntry) {
+      throw new Error("User already has a free raffle entry. Only one free entry per email is allowed.");
+    }
 
     if (!activeRaffle) {
       throw new Error("No active raffle found");
@@ -60,8 +73,8 @@ export const addEntries = mutation({
 
     const now = Date.now();
     // Use paymentStartDate for payment validation, startDate for timer display
-    const paymentStart = activeRaffle.paymentStartDate || activeRaffle.startDate;
-    if (now < paymentStart || now > activeRaffle.endDate) {
+    const paymentStart = (activeRaffle as any).paymentStartDate || (activeRaffle as any).startDate;
+    if (now < paymentStart || now > (activeRaffle as any).endDate) {
       throw new Error("Raffle is not currently accepting entries");
     }
 
@@ -76,7 +89,7 @@ export const addEntries = mutation({
     // Update raffle total entries count
     if (args.paymentStatus === "completed") {
       await ctx.db.patch(activeRaffle._id, {
-        totalEntries: activeRaffle.totalEntries + args.count
+        totalEntries: (activeRaffle as any).totalEntries + args.count
       });
     }
 

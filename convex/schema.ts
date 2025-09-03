@@ -50,7 +50,9 @@ export default defineSchema({
     .index("by_stripe_session", ["stripeSessionId"])
     .index("by_product", ["productId"])
     .index("by_variant", ["variantId"])
-    .index("by_size", ["size"]),
+    .index("by_size", ["size"])
+    .index("by_email_amount_status", ["email", "amount", "paymentStatus"]) // Optimized for free entry checks
+    .index("by_email_payment_status", ["email", "paymentStatus"]), // Optimized for user entry queries
 
   // Raffle configuration
   raffleConfig: defineTable({

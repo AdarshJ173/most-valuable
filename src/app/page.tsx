@@ -9,7 +9,6 @@ import { api } from "../../convex/_generated/api";
 
 export default function Home() {
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showAlreadySubscribed, setShowAlreadySubscribed] = useState(false);
@@ -49,15 +48,43 @@ export default function Home() {
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim() || !phone.trim()) return;
+    
+    // Prevent double submissions
+    if (isSubmitting) return;
+    
+    // Basic validation
+    const trimmedEmail = email.trim();
+    
+    if (!trimmedEmail) {
+      alert('Please enter your email address.');
+      return;
+    }
+    
+    // Email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
 
     setIsSubmitting(true);
+    
     try {
-      const result = await addLead({
-        email: email.toLowerCase().trim(),
-        phone: phone.trim() || undefined,
+      // Add timeout to prevent hanging
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Request timeout')), 15000)
+      );
+      
+      const leadPromise = addLead({
+        email: trimmedEmail.toLowerCase(),
         source: "landing_page"
       });
+      
+      const result = await Promise.race([leadPromise, timeoutPromise]) as {
+        isNewLead: boolean;
+        alreadyHasFreeEntry: boolean;
+        leadId: string;
+      };
       
       // Handle different scenarios based on response
       if (result.isNewLead) {
@@ -77,7 +104,6 @@ export default function Home() {
       }
       
       setEmail("");
-      setPhone("");
       
       // Start countdown timer (4 seconds)
       setRedirectCountdown(4);
@@ -155,14 +181,6 @@ export default function Home() {
                     className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"
                     required
                   />
-                  <input
-                    type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="Phone Number"
-                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"
-                    required
-                  />
                   <button
                     type="submit"
                     disabled={isSubmitting}
@@ -175,7 +193,7 @@ export default function Home() {
                 {/* Subscription disclaimer */}
                 <div className="mt-4 text-center">
                   <p className="text-white text-xs leading-relaxed">
-                    By submitting this form and signing up for texts, you consent to receive marketing emails and text messages (e.g., promos, cart reminders) at the contact provided. Consent is not a condition of purchase. Message & data rates may apply. Message frequency varies. Unsubscribe anytime by replying STOP or using the unsubscribe link.{" "}
+                    By submitting this form, you consent to receive marketing emails (e.g., promos, cart reminders, collection updates) at the email provided. Consent is not a condition of purchase. Unsubscribe anytime using the unsubscribe link.{" "}
                     <Link href="/privacy" className="underline hover:text-white/80 transition-colors">
                       Privacy Policy
                     </Link>

@@ -22,6 +22,7 @@ import type * as initDatabase from "../initDatabase.js";
 import type * as leads from "../leads.js";
 import type * as notifications from "../notifications.js";
 import type * as payments from "../payments.js";
+import type * as raffleConfig from "../raffleConfig.js";
 import type * as raffleMutations from "../raffleMutations.js";
 import type * as raffleSync from "../raffleSync.js";
 import type * as raffleTesting from "../raffleTesting.js";
@@ -50,6 +51,7 @@ declare const fullApi: ApiFromModules<{
   leads: typeof leads;
   notifications: typeof notifications;
   payments: typeof payments;
+  raffleConfig: typeof raffleConfig;
   raffleMutations: typeof raffleMutations;
   raffleSync: typeof raffleSync;
   raffleTesting: typeof raffleTesting;

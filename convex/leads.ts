@@ -20,30 +20,35 @@ export const addLead = mutation({
       throw new Error("Invalid email format");
     }
 
-    // Check for existing lead
-    const existing = await ctx.db
-      .query("leads")
-      .withIndex("by_email", (q) => q.eq("email", email.toLowerCase()))
-      .first();
+    const normalizedEmail = email.toLowerCase();
+    
+    // Parallel queries for better performance
+    const [existing, hasExistingFreeEntry] = await Promise.all([
+      ctx.db
+        .query("leads")
+        .withIndex("by_email", (q) => q.eq("email", normalizedEmail))
+        .first(),
+      ctx.db
+        .query("entries")
+        .withIndex("by_email_amount_status", (q) => 
+          q.eq("email", normalizedEmail).eq("amount", 0).eq("paymentStatus", "completed")
+        )
+        .first()
+    ]);
     
     if (existing) {
-      // Update existing lead with new information if provided
+      // Update existing lead with new information if provided (non-blocking)
       if (phone && phone !== existing.phone) {
         // Validate phone before updating
         const intlPhoneRegex = /^\+[1-9]\d{6,14}$/; // E.164 format, 7 to 15 digits total
         if (!intlPhoneRegex.test(phone)) {
           throw new Error("Invalid phone number format. Please use international format like +14155552671.");
         }
-        await ctx.db.patch(existing._id, { phone });
+        // Non-blocking update
+        ctx.db.patch(existing._id, { phone }).catch(err => 
+          console.error('Failed to update phone for existing lead:', err)
+        );
       }
-      
-      // Check if existing user already has a free entry
-      const hasExistingFreeEntry = await ctx.db
-        .query("entries")
-        .withIndex("by_email", (q) => q.eq("email", email.toLowerCase()))
-        .filter((q) => q.eq(q.field("amount"), 0))
-        .filter((q) => q.eq(q.field("paymentStatus"), "completed"))
-        .first();
       
       return { 
         leadId: existing._id, 
@@ -75,7 +80,7 @@ export const addLead = mutation({
     try {
       await ctx.runMutation(api.entries.addEntries, {
         email: email.toLowerCase(),
-        phone,
+        phone: phone || undefined,
         count: 1,
         amount: 0, // Free entry
         paymentStatus: "completed",
