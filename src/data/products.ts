@@ -58,44 +58,48 @@ export const products: Product[] = [
       { id: "mv-tee-wht", color: "White", media: ["/media/3A Valuable Shirt-memw1.jpeg", "/media/3A Valuable Shirt-memb1.jpeg"] },
     ],
   },
-  // Coming soon products
+  // Available for direct purchase products
   {
     "id": "p6",
     "name": "Most Valuable Box Logo Hoodie",
     "slug": "most-valuable-box-logo-hoodie",
-    "status": "coming_soon",
+    "status": "available",
     "category": "hoodie",
     "price": "$130",
+    "description": "Premium Box Logo Hoodie crafted for exclusivity and comfort. Direct purchase - no raffle, no tickets, just pure style.",
     "media": ["/media/6Most Valuable box Logo Hoodie1.jpeg"]
   },
   {
     "id": "p7",
     "name": "MV Traditional Hoodie",
     "slug": "mv-traditional-hoodie",
-    "status": "coming_soon",
+    "status": "available",
     "category": "hoodie",
     "price": "$150",
+    "description": "Classic MV Traditional Hoodie with premium quality and timeless design. Direct purchase available.",
     "media": ["/Hoodie.png"]
   },
-  // Rest of the products
   {
     "id": "p1b",
     "name": "Box Logo Tee - Black",
-    "slug": "a-valuable-shirt-black",
-    "status": "sold_out",
+    "slug": "box-logo-tee-black",
+    "status": "available",
     "category": "tee",
     "price": "$100",
+    "description": "Iconic Box Logo Tee in premium black. Direct purchase - no raffle, get yours now.",
     "media": ["/media/1A Valuable Shirt-b1.png", "/media/2A Valuable Shirt-b2.png"]
   },
   {
     "id": "p1w",
     "name": "Box Logo Tee - White",
-    "slug": "a-valuable-shirt-white",
-    "status": "sold_out",
+    "slug": "box-logo-tee-white",
+    "status": "available",
     "category": "tee",
     "price": "$100",
+    "description": "Iconic Box Logo Tee in classic white. Direct purchase - no raffle, get yours now.",
     "media": ["/media/1A Valuable Shirt-w1.png", "/media/2A Valuable Shirt2.png"]
   },
+  // Rest of the products
   {
     "id": "p4",
     "name": "MV Camo Backpack",

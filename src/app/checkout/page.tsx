@@ -77,7 +77,13 @@ function CheckoutPageContent() {
   }, [searchParams]);
 
   // Determine if this is a direct purchase or raffle entry
-  const isDirectPurchase = purchaseType === "direct" || productId === "mv-hoodie" || productId === "mv-tee";
+  const isDirectPurchase = purchaseType === "direct" || 
+                          productId === "mv-hoodie" || 
+                          productId === "mv-tee" ||
+                          productId === "p6" || 
+                          productId === "p7" ||
+                          productId === "p1b" || 
+                          productId === "p1w";
   
   // Calculate pricing based on purchase type
   let price: number;
@@ -95,6 +101,18 @@ function CheckoutPageContent() {
     } else if (productId === "mv-tee") {
       price = 80; // $80 for MV Members Only Tee
       productName = "MV Members Only Tee";
+    } else if (productId === "p6") {
+      price = 130; // $130 for Most Valuable Box Logo Hoodie
+      productName = "Most Valuable Box Logo Hoodie";
+    } else if (productId === "p7") {
+      price = 150; // $150 for MV Traditional Hoodie
+      productName = "MV Traditional Hoodie";
+    } else if (productId === "p1b") {
+      price = 100; // $100 for Box Logo Tee - Black
+      productName = "Box Logo Tee - Black";
+    } else if (productId === "p1w") {
+      price = 100; // $100 for Box Logo Tee - White
+      productName = "Box Logo Tee - White";
     } else {
       price = 150; // Default direct purchase price
       productName = "Direct Purchase";

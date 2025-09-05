@@ -41,7 +41,13 @@ export const createCheckoutSession: any = action({
     const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
     // Determine if this is a direct purchase or raffle entry
-    const isDirectPurchase = args.purchaseType === "direct" || args.productId === "mv-hoodie" || args.productId === "mv-tee";
+    const isDirectPurchase = args.purchaseType === "direct" || 
+                             args.productId === "mv-hoodie" || 
+                             args.productId === "mv-tee" ||
+                             args.productId === "p6" || 
+                             args.productId === "p7" ||
+                             args.productId === "p1b" || 
+                             args.productId === "p1w";
     
     // Calculate pricing based on purchase type
     let unitAmount: number;
@@ -58,6 +64,22 @@ export const createCheckoutSession: any = action({
         unitAmount = 8000; // $80.00 in cents
         productName = "MV Members Only Tee";
         productDescription = `Exclusive tee - ${args.selectedColor || 'Black'} (Size: ${args.selectedSize || 'M'})`;
+      } else if (args.productId === "p6") {
+        unitAmount = 13000; // $130.00 in cents
+        productName = "Most Valuable Box Logo Hoodie";
+        productDescription = `Premium box logo hoodie (Size: ${args.selectedSize || 'M'})`;
+      } else if (args.productId === "p7") {
+        unitAmount = 15000; // $150.00 in cents
+        productName = "MV Traditional Hoodie";
+        productDescription = `Traditional MV hoodie (Size: ${args.selectedSize || 'M'})`;
+      } else if (args.productId === "p1b") {
+        unitAmount = 10000; // $100.00 in cents
+        productName = "Box Logo Tee - Black";
+        productDescription = `Iconic box logo tee in black (Size: ${args.selectedSize || 'M'})`;
+      } else if (args.productId === "p1w") {
+        unitAmount = 10000; // $100.00 in cents
+        productName = "Box Logo Tee - White";
+        productDescription = `Iconic box logo tee in white (Size: ${args.selectedSize || 'M'})`;
       } else {
         unitAmount = 15000; // Default direct purchase price - $150.00 in cents
         productName = "Direct Purchase";

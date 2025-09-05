@@ -2,6 +2,19 @@ import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { api, internal } from "./_generated/api";
 
+// Helper function to get product display name
+function getProductName(productId: string): string {
+  switch (productId) {
+    case "mv-hoodie": return "MV Members Only Hoodie";
+    case "mv-tee": return "MV Members Only Tee";
+    case "p6": return "Most Valuable Box Logo Hoodie";
+    case "p7": return "MV Traditional Hoodie";
+    case "p1b": return "Box Logo Tee - Black";
+    case "p1w": return "Box Logo Tee - White";
+    default: return "Product";
+  }
+}
+
 /**
  * Create a pending entry before Stripe checkout
  * This will be updated after successful payment
@@ -41,35 +54,64 @@ export const createPendingEntry = mutation({
       throw new Error("Invalid entry count");
     }
 
-    // Get active raffle to determine pricing
-    const activeRaffle = await ctx.db
-      .query("raffleConfig")
-      .withIndex("by_active", (q) => q.eq("isActive", true))
-      .first();
-
-    if (!activeRaffle) {
-      throw new Error("No active raffle found");
-    }
-
-    // Check if raffle is accepting entries (use paymentStartDate for payments)
-    const now = Date.now();
-    const paymentStart = activeRaffle.paymentStartDate || activeRaffle.startDate;
+    // Determine if this is a direct purchase or raffle entry
+    const isDirectPurchase = productId === "mv-hoodie" || 
+                             productId === "mv-tee" ||
+                             productId === "p6" || 
+                             productId === "p7" ||
+                             productId === "p1b" || 
+                             productId === "p1w";
     
-    // For payments: check paymentStartDate vs endDate
-    // This allows payments to work even if timer hasn't started yet
-    if (now < paymentStart || now > activeRaffle.endDate) {
-      throw new Error("Raffle is not currently accepting entries");
-    }
-
-    // Calculate amount based on bundle or individual pricing
     let amount: number;
-    if (bundle && count === activeRaffle.bundleSize) {
-      amount = activeRaffle.bundlePrice;
+    
+    if (isDirectPurchase) {
+      // Direct purchase pricing - calculate from product ID
+      if (productId === "mv-hoodie") {
+        amount = 15000; // $150.00 in cents
+      } else if (productId === "mv-tee") {
+        amount = 8000; // $80.00 in cents
+      } else if (productId === "p6") {
+        amount = 13000; // $130.00 in cents
+      } else if (productId === "p7") {
+        amount = 15000; // $150.00 in cents
+      } else if (productId === "p1b") {
+        amount = 10000; // $100.00 in cents
+      } else if (productId === "p1w") {
+        amount = 10000; // $100.00 in cents
+      } else {
+        amount = 15000; // Default direct purchase price
+      }
     } else {
-      amount = count * activeRaffle.pricePerEntry;
+      // Raffle entry pricing - need raffle config
+      const activeRaffle = await ctx.db
+        .query("raffleConfig")
+        .withIndex("by_active", (q) => q.eq("isActive", true))
+        .first();
+
+      if (!activeRaffle) {
+        throw new Error("No active raffle found");
+      }
+
+      // Check if raffle is accepting entries (use paymentStartDate for payments)
+      const now = Date.now();
+      const paymentStart = activeRaffle.paymentStartDate || activeRaffle.startDate;
+      
+      // For payments: check paymentStartDate vs endDate
+      // This allows payments to work even if timer hasn't started yet
+      if (now < paymentStart || now > activeRaffle.endDate) {
+        throw new Error("Raffle is not currently accepting entries");
+      }
+
+      // Calculate amount based on bundle or individual pricing
+      if (bundle && count === activeRaffle.bundleSize) {
+        amount = activeRaffle.bundlePrice;
+      } else {
+        amount = count * activeRaffle.pricePerEntry;
+      }
     }
 
     // Create pending entry
+    const now = Date.now();
     return await ctx.db.insert("entries", {
       email: normalizedEmail,
       phone,
@@ -133,16 +175,27 @@ export const handlePaymentSuccess = mutation({
       stripePaymentIntent,
     });
 
-    // Update raffle total entries
-    const activeRaffle = await ctx.db
-      .query("raffleConfig")
-      .withIndex("by_active", (q) => q.eq("isActive", true))
-      .first();
+    // Determine if this is a direct purchase or raffle entry
+    const isDirectPurchase = entry.productId === "mv-hoodie" || 
+                             entry.productId === "mv-tee" ||
+                             entry.productId === "p6" || 
+                             entry.productId === "p7" ||
+                             entry.productId === "p1b" || 
+                             entry.productId === "p1w";
 
-    if (activeRaffle) {
-      await ctx.db.patch(activeRaffle._id, {
-        totalEntries: activeRaffle.totalEntries + entry.count,
-      });
+    // Only update raffle entries for actual raffle purchases
+    if (!isDirectPurchase) {
+      // Update raffle total entries
+      const activeRaffle = await ctx.db
+        .query("raffleConfig")
+        .withIndex("by_active", (q) => q.eq("isActive", true))
+        .first();
+
+      if (activeRaffle) {
+        await ctx.db.patch(activeRaffle._id, {
+          totalEntries: activeRaffle.totalEntries + entry.count,
+        });
+      }
     }
 
     // Log the webhook event
@@ -159,30 +212,43 @@ export const handlePaymentSuccess = mutation({
       createdAt: Date.now(),
     });
 
-    console.log(`Payment completed for ${entry.email}: ${entry.count} entries`);
+    console.log(`Payment completed for ${entry.email}: ${isDirectPurchase ? 'Direct purchase' : entry.count + ' entries'}`);
 
-    // Assign raffle tickets for this completed entry
-    try {
-      await ctx.runMutation(api.raffleTickets.assignTicketsToEntry, {
-        entryId: entry._id,
-      });
-      console.log(`🎫 Assigned ${entry.count} raffle tickets to ${entry.email}`);
-    } catch (ticketError) {
-      console.error('Failed to assign raffle tickets:', ticketError);
-      // Don't fail the payment processing if ticket assignment fails
+    // Only assign raffle tickets for actual raffle purchases
+    if (!isDirectPurchase) {
+      try {
+        await ctx.runMutation(api.raffleTickets.assignTicketsToEntry, {
+          entryId: entry._id,
+        });
+        console.log(`🎫 Assigned ${entry.count} raffle tickets to ${entry.email}`);
+      } catch (ticketError) {
+        console.error('Failed to assign raffle tickets:', ticketError);
+        // Don't fail the payment processing if ticket assignment fails
+      }
     }
 
     // Queue confirmation email for processing
     try {
+      const emailSubject = isDirectPurchase 
+        ? `🛒 Order Confirmed - ${entry.productId ? getProductName(entry.productId) : 'Your Purchase'}` 
+        : `🏆 Gold Rush Entry Confirmed - ${entry.count} ${entry.count === 1 ? 'Entry' : 'Entries'} Secured`;
+      
       await ctx.runMutation(api.emailLogs.createEmailLog, {
         to: entry.email,
-        subject: `🏆 Gold Rush Entry Confirmed - ${entry.count} ${entry.count === 1 ? 'Entry' : 'Entries'} Secured`,
-        message: 'Purchase confirmation email - queued for sending',
-        data: JSON.stringify({ entryId: entry._id, count: entry.count, type: 'purchase_confirmation' }),
+        subject: emailSubject,
+        message: isDirectPurchase ? 'Order confirmation email - queued for sending' : 'Purchase confirmation email - queued for sending',
+        data: JSON.stringify({ 
+          entryId: entry._id, 
+          count: entry.count, 
+          type: isDirectPurchase ? 'order_confirmation' : 'purchase_confirmation',
+          productId: entry.productId,
+          size: entry.size,
+          color: entry.variantColor
+        }),
         status: 'pending',
         sentAt: Date.now(),
       });
-      console.log(`📅 Confirmation email queued for ${entry.email}`);
+      console.log(`📅 ${isDirectPurchase ? 'Order' : 'Purchase'} confirmation email queued for ${entry.email}`);
     } catch (emailError) {
       console.error('Failed to queue confirmation email:', emailError);
       // Don't fail the payment processing if email queuing fails
