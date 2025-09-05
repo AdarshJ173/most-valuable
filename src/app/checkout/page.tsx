@@ -90,13 +90,13 @@ function CheckoutPageContent() {
   if (isDirectPurchase) {
     // Direct purchase pricing
     if (productId === "mv-hoodie") {
-      price = 300; // $300 for MV Members Only Hoodie
+      price = 150; // $150 for MV Members Only Hoodie
       productName = "MV Members Only Hoodie";
     } else if (productId === "mv-tee") {
-      price = 175; // $175 for MV Members Only Tee
+      price = 80; // $80 for MV Members Only Tee
       productName = "MV Members Only Tee";
     } else {
-      price = 300; // Default direct purchase price
+      price = 150; // Default direct purchase price
       productName = "Direct Purchase";
     }
   } else {

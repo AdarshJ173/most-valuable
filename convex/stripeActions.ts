@@ -51,15 +51,15 @@ export const createCheckoutSession: any = action({
     if (isDirectPurchase) {
       // Direct purchase pricing
       if (args.productId === "mv-hoodie") {
-        unitAmount = 30000; // $300.00 in cents
+        unitAmount = 15000; // $150.00 in cents
         productName = "MV Members Only Hoodie";
         productDescription = `Premium hoodie - ${args.selectedColor || 'Black'} (Size: ${args.selectedSize || 'M'})`;
       } else if (args.productId === "mv-tee") {
-        unitAmount = 17500; // $175.00 in cents
+        unitAmount = 8000; // $80.00 in cents
         productName = "MV Members Only Tee";
         productDescription = `Exclusive tee - ${args.selectedColor || 'Black'} (Size: ${args.selectedSize || 'M'})`;
       } else {
-        unitAmount = 30000; // Default direct purchase price - $300.00 in cents
+        unitAmount = 15000; // Default direct purchase price - $150.00 in cents
         productName = "Direct Purchase";
         productDescription = "Premium collection item";
       }

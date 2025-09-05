@@ -34,7 +34,7 @@ export const products: Product[] = [
     slug: "mv-members-only-hoodie",
     status: "available",
     category: "hoodie",
-    price: "$300",
+    price: "$150",
     description: "Premium Members Only Hoodie crafted for exclusivity and comfort. Direct purchase - no raffle, no tickets, just pure style.",
     media: ["/MV Members only hoodie-b.png", "/MV Members only hoodie-w.jpeg", "/MV Members only hoodie-g.png"],
     variants: [
@@ -50,7 +50,7 @@ export const products: Product[] = [
     slug: "mv-members-only-tee",
     status: "available",
     category: "tee",
-    price: "$175",
+    price: "$80",
     description: "Exclusive Members Only Tee crafted for comfort and style. Quality 8oz shirt.",
     media: ["/media/3A Valuable Shirt-memb1.jpeg", "/media/3A Valuable Shirt-memw1.jpeg"],
     variants: [
@@ -65,7 +65,7 @@ export const products: Product[] = [
     "slug": "most-valuable-box-logo-hoodie",
     "status": "coming_soon",
     "category": "hoodie",
-    "price": "$1000",
+    "price": "$130",
     "media": ["/media/6Most Valuable box Logo Hoodie1.jpeg"]
   },
   {
@@ -74,7 +74,7 @@ export const products: Product[] = [
     "slug": "mv-traditional-hoodie",
     "status": "coming_soon",
     "category": "hoodie",
-    "price": "$1000",
+    "price": "$150",
     "media": ["/Hoodie.png"]
   },
   // Rest of the products
@@ -84,7 +84,7 @@ export const products: Product[] = [
     "slug": "a-valuable-shirt-black",
     "status": "sold_out",
     "category": "tee",
-    "price": "$250",
+    "price": "$100",
     "media": ["/media/1A Valuable Shirt-b1.png", "/media/2A Valuable Shirt-b2.png"]
   },
   {
@@ -93,7 +93,7 @@ export const products: Product[] = [
     "slug": "a-valuable-shirt-white",
     "status": "sold_out",
     "category": "tee",
-    "price": "$250",
+    "price": "$100",
     "media": ["/media/1A Valuable Shirt-w1.png", "/media/2A Valuable Shirt2.png"]
   },
   {
