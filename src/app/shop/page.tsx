@@ -139,7 +139,7 @@ export default function ShopPage() {
               >
                 <div className="relative">
                   <div className="block">
-                    <div className={`relative aspect-[1/1] sm:aspect-[3/4] w-full overflow-hidden rounded-none bg-transparent ring-0 sm:rounded-lg ${(["raffle", "p1b", "p1w", "p3", "p4", "p5", "p7", "p8"].includes(p.id) || idx >= 6) ? "sm:bg-white" : "sm:bg-gray-100"} sm:ring-1 sm:ring-gray-200`}>
+                    <div className={`relative aspect-[1/1] sm:aspect-[3/4] w-full overflow-hidden rounded-none bg-transparent ring-0 sm:rounded-lg ${(["raffle", "p1b", "p1w", "p3", "p4", "p5", "p7"].includes(p.id) || idx >= 6) ? "sm:bg-white" : "sm:bg-gray-100"} sm:ring-1 sm:ring-gray-200`}>
                       {/* Sliding track */}
                       <div
                         className="absolute inset-0 flex transition-transform duration-500 ease-out will-change-transform"
@@ -165,13 +165,11 @@ export default function ShopPage() {
                                             ? "scale-[2.1] md:scale-[1.35] object-[50%_60%] sm:object-center"
                                             : p.id === "p4"
                                               ? "scale-[1.3] md:scale-[1.35]"
-                                              : ["p5", "p8"].includes(p.id)
+                                              : p.id === "p5"
                                                 ? "scale-[1.6] md:scale-[1.3]"
                                                 : ["p1b", "p1w"].includes(p.id)
                                                   ? "scale-[1.1] sm:scale-100"
-                                                  : p.id === "p9"
-                                                    ? "scale-100 sm:scale-100"
-                                                    : "scale-[1.7] sm:scale-100"
+                                                  : "scale-[1.7] sm:scale-100"
                               }
                             />
                           </div>

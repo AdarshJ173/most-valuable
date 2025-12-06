@@ -3,7 +3,7 @@ export type Product = {
   name: string;
   slug: string;
   status: "sold_out" | "coming_soon" | "available";
-  category: "tee" | "bag" | "hoodie" | "slides" | string;
+  category: "tee" | "bag" | "hoodie" | string;
   price?: string;
   description?: string;
   variants?: Array<{ id: string; color: string; media: string[] }>;
@@ -119,22 +119,4 @@ export const products: Product[] = [
     "price": "$1200",
     "media": ["/media/5MV camo Duffel.jpeg"]
   },
-  {
-    "id": "p8",
-    "name": "MV Camo Slides",
-    "slug": "mv-camo-slides",
-    "status": "sold_out",
-    "category": "slides",
-    "price": "$1,700",
-    "media": ["/media/8MV camo slides.MOV"]
-  },
-  {
-    "id": "p9",
-    "name": "MV Reversible Shorts",
-    "slug": "mv-reversible-shorts",
-    "status": "sold_out",
-    "category": "shorts",
-    "price": "$1,700",
-    "media": ["/MV Reversible Shorts-f.png", "/MV Reversible Shorts-b.png"]
-  }
 ];
