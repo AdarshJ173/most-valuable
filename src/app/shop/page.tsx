@@ -75,6 +75,7 @@ export default function ShopPage() {
   const [selected, setSelected] = useState<VariantState>(initial);
   const [loadingQty, setLoadingQty] = useState<number | null>(null);
   const [slideIndex, setSlideIndex] = useState<Record<string, number>>({});
+  const [heroVideoIndex, setHeroVideoIndex] = useState<number>(0);
 
   // Auto-slide images every 3s for products that have multiple media
   useEffect(() => {
@@ -97,6 +98,20 @@ export default function ShopPage() {
     return () => clearInterval(id);
   }, [selected]);
 
+  // Ensure hero videos play when they become active
+  useEffect(() => {
+    const video1 = document.getElementById('hero-video-1') as HTMLVideoElement;
+    const video2 = document.getElementById('hero-video-2') as HTMLVideoElement;
+
+    if (heroVideoIndex === 0 && video1) {
+      video1.currentTime = 0;
+      video1.play().catch(err => console.log('Video 1 play error:', err));
+    } else if (heroVideoIndex === 1 && video2) {
+      video2.currentTime = 0;
+      video2.play().catch(err => console.log('Video 2 play error:', err));
+    }
+  }, [heroVideoIndex]);
+
   function handleBuyClick(quantity: number) {
     // Redirect to checkout page with quantity parameter
     window.location.href = `/checkout?quantity=${quantity}`;
@@ -106,7 +121,7 @@ export default function ShopPage() {
     <main className="relative min-h-screen overflow-hidden bg-white text-black">
       {/* Background set to pure white (gradient removed) */}
 
-      <section className="relative z-10 mx-auto max-w-6xl px-0 py-14 sm:px-6">
+      <section className="relative z-10 mx-auto max-w-6xl px-0 py-0 sm:px-6">
         <header className="mb-10">
           {/* One-line header: big logo + raffle timer */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
@@ -119,8 +134,45 @@ export default function ShopPage() {
             </div>
           </div>
         </header>
+      </section>
 
+      {/* Hero Section with Videos - Full Width */}
+      <section className="relative w-full h-[60vh] sm:h-[70vh] lg:h-[80vh] mb-8 sm:mb-12">
+        <div className="absolute inset-0">
+          {/* Video 1: Red Hoddie */}
+          <div className={`absolute inset-0 transition-opacity duration-1000 ${heroVideoIndex === 0 ? 'opacity-100' : 'opacity-0'}`}>
+            <video
+              id="hero-video-1"
+              className="w-full h-full object-cover"
+              muted
+              playsInline
+              autoPlay
+              onEnded={() => setHeroVideoIndex(1)}
+            >
+              <source src="/Red Hoddie.mp4" type="video/mp4" />
+            </video>
+          </div>
 
+          {/* Video 2: Hoodie */}
+          <div className={`absolute inset-0 transition-opacity duration-1000 ${heroVideoIndex === 1 ? 'opacity-100' : 'opacity-0'}`}>
+            <video
+              id="hero-video-2"
+              className="w-full h-full object-cover"
+              muted
+              playsInline
+              autoPlay
+              onEnded={() => setHeroVideoIndex(0)}
+            >
+              <source src="/Hoodie.mp4" type="video/mp4" />
+            </video>
+          </div>
+
+          {/* Gradient overlay for better text visibility */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30 pointer-events-none"></div>
+        </div>
+      </section>
+
+      <section className="relative z-10 mx-auto max-w-6xl px-0 py-0 sm:px-6">
         {/* Mobile: 2x2 grid, Desktop: 3x3 grid */}
         <div className="grid grid-cols-2 gap-0 px-0 sm:grid-cols-3 sm:gap-4 lg:gap-6 sm:px-0">
           {products.map((p, idx) => {
