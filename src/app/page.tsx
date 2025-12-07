@@ -14,14 +14,14 @@ export default function Home() {
   const [showAlreadySubscribed, setShowAlreadySubscribed] = useState(false);
   const [isNewUser, setIsNewUser] = useState(true);
   const [redirectCountdown, setRedirectCountdown] = useState(0);
-  
+
   const router = useRouter();
   const addLead = useMutation(api.leads.addLead);
 
   // Countdown timer effect for redirect
   useEffect(() => {
     let interval: NodeJS.Timeout;
-    
+
     if ((showSuccess || showAlreadySubscribed) && redirectCountdown > 0) {
       interval = setInterval(() => {
         setRedirectCountdown(prev => prev - 1);
@@ -41,25 +41,25 @@ export default function Home() {
       const timeoutId = setTimeout(() => {
         router.push('/shop');
       }, 100); // Small delay to ensure state updates are complete
-      
+
       return () => clearTimeout(timeoutId);
     }
   }, [showSuccess, showAlreadySubscribed, redirectCountdown, router]);
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Prevent double submissions
     if (isSubmitting) return;
-    
+
     // Basic validation
     const trimmedEmail = email.trim();
-    
+
     if (!trimmedEmail) {
       alert('Please enter your email address.');
       return;
     }
-    
+
     // Email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(trimmedEmail)) {
@@ -68,24 +68,24 @@ export default function Home() {
     }
 
     setIsSubmitting(true);
-    
+
     try {
       // Add timeout to prevent hanging
-      const timeoutPromise = new Promise((_, reject) => 
+      const timeoutPromise = new Promise((_, reject) =>
         setTimeout(() => reject(new Error('Request timeout')), 15000)
       );
-      
+
       const leadPromise = addLead({
         email: trimmedEmail.toLowerCase(),
         source: "landing_page"
       });
-      
+
       const result = await Promise.race([leadPromise, timeoutPromise]) as {
         isNewLead: boolean;
         alreadyHasFreeEntry: boolean;
         leadId: string;
       };
-      
+
       // Handle different scenarios based on response
       if (result.isNewLead) {
         // New user - they got a free entry
@@ -102,12 +102,12 @@ export default function Home() {
           setShowSuccess(true);
         }
       }
-      
+
       setEmail("");
-      
+
       // Start countdown timer (4 seconds)
       setRedirectCountdown(4);
-      
+
     } catch (error) {
       console.error("Failed to add lead:", error);
       alert("Something went wrong. Please try again.");
@@ -151,12 +151,12 @@ export default function Home() {
           <div className="bg-transparent border-transparent rounded-2xl p-8">
             {/* Logo */}
             <div className="text-center mb-6">
-              <Image 
-                src="/LogoWhite.png" 
-                alt="Most Valuable" 
-                width={640} 
-                height={180} 
-                className="mx-auto h-40 w-auto sm:h-48" 
+              <Image
+                src="/LogoWhite.png"
+                alt="Most Valuable"
+                width={640}
+                height={180}
+                className="mx-auto h-40 w-auto sm:h-48"
               />
             </div>
 
@@ -171,7 +171,7 @@ export default function Home() {
                     Sign Up for Exclusive Access
                   </h2>
                 </div>
-                
+
                 <form onSubmit={handleEmailSubmit} className="space-y-4">
                   <input
                     type="email"
@@ -180,16 +180,18 @@ export default function Home() {
                     placeholder="Enter your email"
                     className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"
                     required
+                    suppressHydrationWarning
                   />
                   <button
                     type="submit"
                     disabled={isSubmitting}
                     className="w-full bg-white text-black px-6 py-3 rounded-xl font-semibold hover:bg-white/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    suppressHydrationWarning
                   >
                     {isSubmitting ? "Adding..." : "Subscribe"}
                   </button>
                 </form>
-                
+
                 {/* Subscription disclaimer */}
                 <div className="mt-4 text-center">
                   <p className="text-white text-xs leading-relaxed">
@@ -292,6 +294,7 @@ export default function Home() {
               <button
                 onClick={handleShopNow}
                 className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-[1.02] shadow-lg"
+                suppressHydrationWarning
               >
                 Shop Now
               </button>
