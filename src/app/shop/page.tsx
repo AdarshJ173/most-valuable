@@ -121,23 +121,15 @@ export default function ShopPage() {
     <main className="relative min-h-screen overflow-hidden bg-white text-black">
       {/* Background set to pure white (gradient removed) */}
 
-      <section className="relative z-10 mx-auto max-w-6xl px-0 py-0 sm:px-6">
-        <header className="mb-10">
-          {/* One-line header: big logo + raffle timer */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-            <Link href="/" aria-label="MV home" className="inline-flex items-center">
-              <Image src="/shopPageLogo.png" alt="Most Valuable" width={540} height={180} className="h-20 sm:h-24 w-auto" priority />
-            </Link>
-            <div className="inline-flex items-center gap-3 bg-black/5 border border-gray-200 rounded-2xl px-4 sm:px-6 py-3 shadow-sm text-black">
-              <span className="text-xs sm:text-sm font-medium">Gold Rush</span>
-              <RaffleCountdownTimer className="sm:border-l border-gray-300 sm:pl-4 text-black" />
-            </div>
-          </div>
-        </header>
-      </section>
+      {/* Hero Section with Videos - Full Viewport Height */}
+      <section className="relative w-full h-screen mb-8 sm:mb-12">
+        {/* Logo overlay on top-left */}
+        <div className="absolute top-6 left-6 z-20">
+          <Link href="/" aria-label="MV home" className="inline-flex items-center">
+            <Image src="/LogoWhite.png" alt="Most Valuable" width={540} height={180} className="h-24 sm:h-28 w-auto drop-shadow-lg" priority />
+          </Link>
+        </div>
 
-      {/* Hero Section with Videos - Full Width */}
-      <section className="relative w-full h-[60vh] sm:h-[70vh] lg:h-[80vh] mb-8 sm:mb-12">
         <div className="absolute inset-0">
           {/* Video 1: Red Hoddie */}
           <div className={`absolute inset-0 transition-opacity duration-1000 ${heroVideoIndex === 0 ? 'opacity-100' : 'opacity-0'}`}>
@@ -170,11 +162,32 @@ export default function ShopPage() {
           {/* Gradient overlay for better text visibility */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30 pointer-events-none"></div>
         </div>
+
+        {/* Navigation Buttons */}
+        <button
+          onClick={() => setHeroVideoIndex((prev) => prev === 0 ? 1 : 0)}
+          className="absolute left-6 top-1/2 -translate-y-1/2 z-20 bg-black/40 hover:bg-black/60 backdrop-blur-md rounded-full p-2.5 transition-all duration-300 hover:scale-110 shadow-lg"
+          aria-label="Previous video"
+        >
+          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        <button
+          onClick={() => setHeroVideoIndex((prev) => prev === 0 ? 1 : 0)}
+          className="absolute right-6 top-1/2 -translate-y-1/2 z-20 bg-black/40 hover:bg-black/60 backdrop-blur-md rounded-full p-2.5 transition-all duration-300 hover:scale-110 shadow-lg"
+          aria-label="Next video"
+        >
+          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
       </section>
 
-      <section className="relative z-10 mx-auto max-w-6xl px-0 py-0 sm:px-6">
-        {/* Mobile: 2x2 grid, Desktop: 3x3 grid */}
-        <div className="grid grid-cols-2 gap-0 px-0 sm:grid-cols-3 sm:gap-4 lg:gap-6 sm:px-0">
+      <section className="relative z-10 w-full px-3 py-6 sm:px-4">
+        {/* Clean product grid matching reference */}
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 sm:gap-4">
           {products.map((p, idx) => {
             const hasVariants = !!p.variants?.length;
             const selectedId = selected[p.id];
@@ -187,11 +200,11 @@ export default function ShopPage() {
               <Link
                 href={`/product/${p.slug}`}
                 key={p.id}
-                className={`group relative block rounded-none p-2 sm:rounded-xl sm:border sm:border-gray-200 sm:bg-white text-black sm:p-5 sm:shadow-md transition duration-300 will-change-transform sm:hover:-translate-y-1 sm:hover:shadow-lg sm:focus-within:shadow-lg animate-fade-up animate-delay-${(idx % 5) + 1}`}
+                className="group relative block bg-white transition-opacity duration-200 hover:opacity-90"
               >
                 <div className="relative">
                   <div className="block">
-                    <div className={`relative aspect-[1/1] sm:aspect-[3/4] w-full overflow-hidden rounded-none bg-transparent ring-0 sm:rounded-lg ${(["raffle", "p1b", "p1w", "p3", "p4", "p5", "p7"].includes(p.id) || idx >= 6) ? "sm:bg-white" : "sm:bg-gray-100"} sm:ring-1 sm:ring-gray-200`}>
+                    <div className="relative aspect-square w-full overflow-hidden bg-white">
                       {/* Sliding track */}
                       <div
                         className="absolute inset-0 flex transition-transform duration-500 ease-out will-change-transform"
@@ -265,34 +278,17 @@ export default function ShopPage() {
                   )}
                 </div>
 
-                <div className="mt-1 flex flex-col items-center text-center sm:mt-4">
-                  <div className="flex flex-col items-center sm:items-center w-full">
-                    <h3 className="text-xs font-medium sm:text-lg underline-offset-2 group-hover:underline text-center">{p.name}</h3>
-                    {/* Show price for sold out and coming soon items with faded styling */}
+                <div className="pt-2 pb-1 px-1">
+                  <div className="flex flex-col items-center text-center w-full">
+                    <h3 className="text-xs sm:text-sm font-normal text-gray-800 line-clamp-2 leading-tight">{p.name}</h3>
                     {p.price && p.status !== "available" && (
-                      <span className="text-xs sm:text-sm text-gray-400 opacity-60 mt-1">{p.price}</span>
+                      <span className="text-xs text-gray-500 mt-1">{p.price}</span>
                     )}
                   </div>
-                  <div className="mt-2 sm:mt-3"><StatusBadge status={p.status} /></div>
+                  <div className="mt-1.5 flex justify-center"><StatusBadge status={p.status} /></div>
                 </div>
 
-                {/* Hide variants on mobile for cleaner look */}
-                {hasVariants && p.id !== "raffle" && (
-                  <div className="hidden sm:flex mt-3 gap-2">
-                    {p.variants!.map((v) => (
-                      <button
-                        key={v.id}
-                        type="button"
-                        aria-label={`Select ${v.color}`}
-                        onClick={(e) => { e.stopPropagation(); setSelected((s) => ({ ...s, [p.id]: v.id })); }}
-                        className={`h-8 rounded-full px-3 text-xs font-medium ring-1 transition ${selected[p.id] === v.id ? "bg-black text-white ring-black/20" : "bg-gray-100 text-black hover:bg-gray-200 ring-gray-300"
-                          }`}
-                      >
-                        {v.color}
-                      </button>
-                    ))}
-                  </div>
-                )}
+
 
                 {p.status === "available" && (
                   p.id === "raffle" ? (
