@@ -100,7 +100,85 @@ export const products: Product[] = [
     "description": "Iconic Box Logo Tee in classic white. 1g of gold included.",
     "media": ["/media/1A Valuable Shirt-w1.png", "/media/2A Valuable Shirt2.png"]
   },
-  // Rest of the products
+  {
+    "id": "box-logo-zipper",
+    "name": "Box Logo Zipper",
+    "slug": "box-logo-zipper",
+    "status": "available",
+    "category": "hoodie",
+    "price": "$85",
+    "description": "Premium Box Logo Zipper crafted for style and comfort. Comes with 1g of gold.",
+    "media": [
+      "/socoldblooded-attachments new/1CA3CA6E-ECD9-4964-BB92-4D283B53D7E5.png",
+      "/socoldblooded-attachments new/36B22280-9267-4655-BA02-654B83A8DD88.png",
+      "/socoldblooded-attachments new/D0905387-2F1C-427F-9F5F-56766D302B5D.jpeg"
+    ]
+  },
+  {
+    "id": "box-logo-beanie",
+    "name": "Box Logo Beanie",
+    "slug": "box-logo-beanie",
+    "status": "available",
+    "category": "beanie",
+    "price": "$85",
+    "description": "Premium Box Logo Beanie crafted for warmth and style. Perfect for any season.",
+    "media": [
+      "/socoldblooded-attachments new/943D9B6B-AB4D-419C-B34F-65B739EB9A23.png",
+      "/socoldblooded-attachments new/C0600980-49DF-4C5C-9BAC-3277BE8E643F.png",
+      "/socoldblooded-attachments new/ECA390CB-4D27-4CAA-A523-7E100E3F9C90.png",
+      "/socoldblooded-attachments new/FFC5BE59-CCA5-4C94-983E-E5C10216AA01.png"
+    ]
+  },
+  // Coming Soon Products
+  {
+    "id": "cs1",
+    "name": "MV Track Pants",
+    "slug": "mv-track-pants",
+    "status": "coming_soon",
+    "category": "pants",
+    "media": ["/Coming Soon/0F20297A-5779-4056-8133-DAAB1DBF3582.jpeg"]
+  },
+  {
+    "id": "cs2",
+    "name": "A Valuable Pillow",
+    "slug": "a-valuable-pillow",
+    "status": "coming_soon",
+    "category": "home",
+    "media": ["/Coming Soon/524427C4-666D-47BB-933D-A8F3B52A4CD1.png"]
+  },
+  {
+    "id": "cs3",
+    "name": "Valuable Glasses",
+    "slug": "valuable-glasses",
+    "status": "coming_soon",
+    "category": "accessories",
+    "media": ["/Coming Soon/60FDA3FE-A017-4C7A-91E7-17D1CB040313.jpeg"]
+  },
+  {
+    "id": "cs4",
+    "name": "A Valuable Beanbag",
+    "slug": "a-valuable-beanbag",
+    "status": "coming_soon",
+    "category": "home",
+    "media": ["/Coming Soon/705FF280-F144-486E-BB41-671B313F606A.jpeg"]
+  },
+  {
+    "id": "cs5",
+    "name": "MV Track Pants",
+    "slug": "mv-track-pants-2",
+    "status": "coming_soon",
+    "category": "pants",
+    "media": ["/Coming Soon/CF2BAE50-F485-43C3-8AE4-D638F71275F6.jpeg"]
+  },
+  {
+    "id": "cs6",
+    "name": "A Valuable Jacket",
+    "slug": "a-valuable-jacket",
+    "status": "coming_soon",
+    "category": "jacket",
+    "media": ["/Coming Soon/D6437BC8-D0C1-4CBC-8651-366AB706D6C8.png"]
+  },
+  // Sold Out Products
   {
     "id": "p4",
     "name": "MV Camo Backpack",

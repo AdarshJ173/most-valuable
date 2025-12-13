@@ -114,6 +114,12 @@ function CheckoutPageContent() {
     } else if (productId === "p1w") {
       price = 350; // $350 for Box Logo Tee - White (1g gold)
       productName = "Box Logo Tee - White";
+    } else if (productId === "box-logo-zipper") {
+      price = 85; // $85 for Box Logo Zipper (1g gold)
+      productName = "Box Logo Zipper";
+    } else if (productId === "box-logo-beanie") {
+      price = 85; // $85 for Box Logo Beanie
+      productName = "Box Logo Beanie";
     } else if (productId === "raffle") {
       price = 100; // $100 for First Shirt (A Valuable Shirt)
       productName = "A Valuable Shirt";
@@ -818,8 +824,8 @@ function CheckoutPageContent() {
                 type="submit"
                 disabled={isLoading || !isFormValid()}
                 className={`w-full px-8 py-4 font-semibold rounded-lg transition-all duration-200 ${isLoading || !isFormValid()
-                    ? 'bg-gray-600 text-gray-300 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white transform hover:scale-105 shadow-lg hover:shadow-xl'
+                  ? 'bg-gray-600 text-gray-300 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white transform hover:scale-105 shadow-lg hover:shadow-xl'
                   }`}
               >
                 {isLoading ? (
