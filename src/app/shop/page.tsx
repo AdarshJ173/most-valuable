@@ -113,207 +113,147 @@ export default function ShopPage() {
   const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
   const headerOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-
   return (
     <main className="relative min-h-screen bg-white text-black">
       {/* ============================================
-          HERO SECTION - PREMIUM LUXURY DESIGN
+          HERO SECTION - EDITORIAL LUXURY DESIGN
           ============================================ */}
       <section ref={heroRef} className="relative h-screen w-full overflow-hidden bg-[#0a0a0a]">
-        {/* Atmospheric Background Layers */}
-        <div className="absolute inset-0">
-          {/* Deep gradient base */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a] via-[#111] to-[#0a0a0a]" />
-
-          {/* Subtle radial glow behind product */}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(212,175,55,0.06)_0%,_transparent_50%)]" />
-
-          {/* Grain texture for depth */}
-          <div
-            className="absolute inset-0 opacity-[0.03]"
-            style={{
-              backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E")'
-            }}
-          />
-        </div>
-
-        {/* Floating Background Typography - Creates Depth */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden opacity-[0.03]">
-          <span className="text-[30vw] font-bold tracking-[-0.05em] text-white whitespace-nowrap">
-            MV
-          </span>
-        </div>
-
-        {/* Centered Product Image with Parallax + Glow */}
+        {/* Full-Screen Background Image */}
         <motion.div
-          className="absolute inset-0 flex items-center justify-center z-10"
+          className="absolute inset-0 z-0"
           style={{ y: imageY, scale: imageScale }}
         >
-          {/* Product glow effect */}
-          <div className="absolute w-[45%] sm:w-[35%] md:w-[30%] aspect-square rounded-full bg-gradient-to-t from-amber-500/15 via-amber-500/5 to-transparent blur-3xl" />
+          <Image
+            src="/l1.png"
+            alt="Most Valuable"
+            fill
+            className="object-cover object-center"
+            priority
+          />
+        </motion.div>
 
-          {/* Product image */}
-          <div className="relative w-[50%] sm:w-[40%] md:w-[32%] lg:w-[28%] aspect-[3/4]">
-            <Image
-              src="/Hoodie.png"
-              alt="Most Valuable Hoodie"
-              fill
-              className="object-contain drop-shadow-2xl"
-              priority
-            />
+        {/* Grain texture */}
+        <div
+          className="absolute inset-0 z-[1] opacity-[0.04] pointer-events-none"
+          style={{
+            backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%270 0 256 256%27 xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cfilter id=%27noise%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.8%27 numOctaves=%274%27 stitchTiles=%27stitch%27/%3E%3C/filter%3E%3Crect width=%27100%2525%27 height=%27100%2525%27 filter=%27url(%23noise)%27/%3E%3C/svg%3E")'
+          }}
+        />
+
+        {/* ---- TOP NAV: Pill-shaped centered nav ---- */}
+        <motion.div
+          className="absolute top-6 left-0 right-0 z-30 flex items-center justify-center"
+          style={{ opacity: headerOpacity }}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          <div className="flex items-center gap-1 bg-white/10 backdrop-blur-xl rounded-full px-1.5 py-1.5 border border-white/15 shadow-2xl">
+            <Link href="/" className="px-4 sm:px-5 py-2 text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-white/70 hover:text-white transition-colors duration-300 rounded-full hover:bg-white/10">
+              Home
+            </Link>
+            <Link href="/shop" className="px-4 sm:px-5 py-2 text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-white bg-white/15 rounded-full font-medium">
+              Shop
+            </Link>
+            <Link href="#products" className="px-4 sm:px-5 py-2 text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-white/70 hover:text-white transition-colors duration-300 rounded-full hover:bg-white/10">
+              Collection
+            </Link>
           </div>
         </motion.div>
 
-        {/* Premium Header */}
-        <motion.header
-          className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-6 sm:px-12 lg:px-16 py-6 sm:py-8"
-          style={{ opacity: headerOpacity }}
-        >
-          {/* Left - Menu */}
-          <div className="flex-1 flex justify-start">
-            <Link
-              href="/"
-              className="group flex items-center gap-2 text-[10px] sm:text-[11px] uppercase tracking-[0.35em] text-white/50 hover:text-white transition-all duration-500"
-            >
-              <span className="w-4 h-[1px] bg-white/30 group-hover:w-6 group-hover:bg-amber-400 transition-all duration-500" />
-              Menu
-            </Link>
-          </div>
-
-          {/* Center - Logo */}
-          <div className="flex-1 flex justify-center">
-            <Link href="/" className="group">
-              <Image
-                src="/LogoWhite.png"
-                alt="Most Valuable"
-                width={100}
-                height={35}
-                className="h-6 sm:h-7 w-auto object-contain opacity-80 group-hover:opacity-100 transition-opacity duration-300"
-                priority
-              />
-            </Link>
-          </div>
-
-          {/* Right - Shop with Dropdown */}
-          <div className="flex-1 flex justify-end">
-            <div className="relative group">
-              <Link
-                href="#products"
-                className="flex items-center gap-2 text-[10px] sm:text-[11px] uppercase tracking-[0.35em] text-white/50 hover:text-white transition-all duration-500"
-              >
-                Shop
-                <svg className="w-3 h-3 transition-transform duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
-                </svg>
-              </Link>
-
-              {/* Dropdown Menu */}
-              <div className="absolute top-full right-0 mt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                {/* Invisible bridge to prevent menu from closing */}
-                <div className="absolute -top-4 left-0 right-0 h-4" />
-
-                <div className="bg-black/95 backdrop-blur-xl border border-white/10 rounded-sm py-3 min-w-[180px] shadow-2xl">
-                  <a
-                    href="#hoodies"
-                    className="flex items-center justify-between px-5 py-2.5 text-[10px] uppercase tracking-[0.25em] text-white/60 hover:text-white hover:bg-white/5 transition-all duration-300"
-                  >
-                    <span>Hoodies</span>
-                    <span className="text-amber-500/70 text-[9px]">{products.filter(p => p.status === "available" && p.category === "hoodie").length}</span>
-                  </a>
-                  <a
-                    href="#tees"
-                    className="flex items-center justify-between px-5 py-2.5 text-[10px] uppercase tracking-[0.25em] text-white/60 hover:text-white hover:bg-white/5 transition-all duration-300"
-                  >
-                    <span>T-Shirts</span>
-                    <span className="text-amber-500/70 text-[9px]">{products.filter(p => p.status === "available" && p.category === "tee").length}</span>
-                  </a>
-                  <a
-                    href="#accessories"
-                    className="flex items-center justify-between px-5 py-2.5 text-[10px] uppercase tracking-[0.25em] text-white/60 hover:text-white hover:bg-white/5 transition-all duration-300"
-                  >
-                    <span>Accessories</span>
-                    <span className="text-amber-500/70 text-[9px]">{products.filter(p => p.status === "available" && p.category === "beanie").length}</span>
-                  </a>
-
-                  {/* Divider */}
-                  <div className="my-2 mx-4 h-[1px] bg-white/10" />
-
-                  <a
-                    href="#products"
-                    className="flex items-center px-5 py-2.5 text-[10px] uppercase tracking-[0.25em] text-amber-500/80 hover:text-amber-400 hover:bg-white/5 transition-all duration-300"
-                  >
-                    View All
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.header>
-
-        {/* Bottom Content - Brand Typography + CTA */}
+        {/* ---- BRAND MARK: Top-left logo ---- */}
         <motion.div
-          className="absolute inset-x-0 bottom-0 z-20 pb-10 sm:pb-14 lg:pb-16 px-6"
-          style={{ y: textY, opacity: headerOpacity }}
+          className="absolute top-6 left-6 sm:left-10 z-30"
+          style={{ opacity: headerOpacity }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
-          {/* Gradient fade for text readability */}
-          <div className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/70 to-transparent pointer-events-none" />
+          <Link href="/">
+            <Image
+              src="/LogoWhite.png"
+              alt="Most Valuable"
+              width={90}
+              height={30}
+              className="h-5 sm:h-6 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity duration-300"
+              priority
+            />
+          </Link>
+        </motion.div>
 
-          <div className="relative max-w-7xl mx-auto text-center">
-            {/* Small tagline */}
-            <motion.p
-              className="text-[9px] sm:text-[10px] uppercase tracking-[0.5em] text-amber-400/60 mb-3 font-light"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              Premium Streetwear • Real Gold
-            </motion.p>
-
-            {/* Main headline */}
+        {/* ---- MAIN TYPOGRAPHY: Bold editorial overlay ---- */}
+        <div className="absolute inset-0 z-20 flex flex-col justify-center px-6 sm:px-12 lg:px-20 pointer-events-none">
+          <motion.div
+            className="max-w-4xl"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
             <motion.h1
-              className="text-[10vw] sm:text-[8vw] md:text-[6vw] lg:text-[5vw] font-extralight tracking-[0.12em] text-white leading-none select-none uppercase"
-              initial={{ opacity: 0, y: 20 }}
+              className="mb-6 select-none"
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
             >
-              Most Valuable
+              <span
+                className="block text-[14vw] sm:text-[10vw] md:text-[8vw] lg:text-[7vw] font-bold leading-[0.9] tracking-[-0.02em] text-white"
+                style={{ fontFamily: "var(--font-space)" }}
+              >
+                Most
+              </span>
+              <span
+                className="block text-[16vw] sm:text-[11vw] md:text-[9vw] lg:text-[8vw] font-light italic leading-[0.95] text-white/90"
+                style={{ fontFamily: "var(--font-cormorant)" }}
+              >
+                Valuable
+              </span>
             </motion.h1>
 
-            {/* Subtle divider */}
-            <motion.div
-              className="w-12 h-[1px] bg-gradient-to-r from-transparent via-amber-500 to-transparent mx-auto mt-5 mb-5"
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
+            <motion.p
+              className="text-sm sm:text-base text-white/60 font-light max-w-md leading-relaxed mb-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-            />
+            >
+              Premium streetwear crafted with real gold accents.
+              Designed for those who refuse to blend in.
+            </motion.p>
 
-            {/* CTA Button */}
             <motion.div
-              initial={{ opacity: 0, y: 15 }}
+              className="flex flex-wrap items-center gap-4 pointer-events-auto"
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.7 }}
             >
               <Link
                 href="#products"
-                className="inline-flex items-center gap-2 border border-white/20 text-white/70 px-6 sm:px-8 py-2.5 sm:py-3 text-[9px] sm:text-[10px] uppercase tracking-[0.25em] hover:border-amber-500/40 hover:text-white hover:bg-white/5 transition-all duration-500"
+                className="group inline-flex items-center gap-3 bg-white text-black px-7 sm:px-9 py-3.5 sm:py-4 rounded-full text-[10px] sm:text-xs uppercase tracking-[0.2em] font-medium hover:bg-amber-400 hover:text-black transition-all duration-500 shadow-lg"
+                style={{ fontFamily: "var(--font-space)" }}
               >
-                <span>Explore Collection</span>
-                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
+                Shop Now
+                <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </Link>
+              <Link
+                href="/"
+                className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white px-7 sm:px-9 py-3.5 sm:py-4 rounded-full text-[10px] sm:text-xs uppercase tracking-[0.2em] border border-white/20 hover:bg-white/20 transition-all duration-500"
+                style={{ fontFamily: "var(--font-space)" }}
+              >
+                Learn More
+              </Link>
             </motion.div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
 
         {/* Scroll Indicator */}
         <motion.div
-          className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 hidden sm:block"
-          animate={{ y: [0, 6, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 hidden sm:flex flex-col items-center gap-2"
           style={{ opacity: headerOpacity }}
         >
-          <div className="w-[1px] h-6 bg-gradient-to-b from-white/30 to-transparent" />
+          <span className="text-[8px] uppercase tracking-[0.3em] text-white/40" style={{ fontFamily: "var(--font-space)" }}>Scroll</span>
+          <div className="w-[1px] h-6 bg-gradient-to-b from-white/40 to-transparent" />
         </motion.div>
       </section>
 
