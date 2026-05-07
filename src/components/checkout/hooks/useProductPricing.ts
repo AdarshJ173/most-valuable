@@ -24,28 +24,42 @@ export function useProductPricing({
             purchaseType === "direct" ||
             DIRECT_PURCHASE_PRODUCT_IDS.includes(productId);
 
-        // Calculate bundle for raffle entries
-        const isBundle = !isDirectPurchase && quantity === 4;
-
-        let price: number;
-        let productName: string;
+        let price = 0;
+        let productName = "";
         let savings = "";
+        let isBundle = false;
 
-        if (isDirectPurchase) {
-            // Direct purchase pricing from config
-            const productConfig = PRODUCT_PRICING[productId];
-            if (productConfig) {
-                price = productConfig.price;
-                productName = productConfig.name;
+        if (productId) {
+            // SINGLE PRODUCT CHECKOUT
+            if (isDirectPurchase) {
+                const productConfig = PRODUCT_PRICING[productId];
+                if (productConfig) {
+                    price = productConfig.price * quantity;
+                    productName = productConfig.name;
+                } else {
+                    price = 65 * quantity; // Safer default for V2 shirts
+                    productName = "Storefront Product";
+                }
             } else {
-                price = 1700; // Default direct purchase price
-                productName = "Direct Purchase";
+                // Raffle entry pricing
+                isBundle = quantity === 4;
+                price = isBundle ? 100 : quantity * 50;
+                savings = isBundle ? "Save $100!" : "";
+                productName = "Gold Rush Raffle Entries";
             }
         } else {
-            // Raffle entry pricing
-            price = isBundle ? 100 : quantity * 50;
-            savings = isBundle ? "Save $100!" : "";
-            productName = "Gold Rush Raffle Entries";
+            // CART CHECKOUT (FROM NAVBAR)
+            if (typeof window !== "undefined") {
+                const savedCart = localStorage.getItem("mv-cart");
+                if (savedCart) {
+                    const cart = JSON.parse(savedCart);
+                    price = cart.reduce((acc: number, item: { price: string }) => acc + (parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0), 0);
+                    productName = `${cart.length} Item(s) in Cart`;
+                } else {
+                    price = 0;
+                    productName = "Empty Cart";
+                }
+            }
         }
 
         return {
