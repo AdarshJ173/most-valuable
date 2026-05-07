@@ -76,6 +76,11 @@ export default function ShopPage() {
   const [selected, setSelected] = useState<VariantState>(initial);
   const [loadingQty, setLoadingQty] = useState<number | null>(null);
   const [slideIndex, setSlideIndex] = useState<Record<string, number>>({});
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Auto-slide images every 3s for products that have multiple media
   useEffect(() => {
@@ -113,6 +118,7 @@ export default function ShopPage() {
   const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
   const headerOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const currentHeaderOpacity = isMounted ? headerOpacity : 1;
   return (
     <main className="relative min-h-screen bg-white text-black">
       {/* ============================================
@@ -144,7 +150,7 @@ export default function ShopPage() {
         {/* ---- TOP NAV: Pill-shaped centered nav ---- */}
         <motion.div
           className="absolute top-6 left-0 right-0 z-30 flex items-center justify-center"
-          style={{ opacity: headerOpacity }}
+          style={{ opacity: currentHeaderOpacity }}
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
@@ -165,7 +171,7 @@ export default function ShopPage() {
         {/* ---- BRAND MARK: Top-left logo ---- */}
         <motion.div
           className="absolute top-6 left-6 sm:left-10 z-30"
-          style={{ opacity: headerOpacity }}
+          style={{ opacity: currentHeaderOpacity }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -250,7 +256,7 @@ export default function ShopPage() {
         {/* Scroll Indicator */}
         <motion.div
           className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 hidden sm:flex flex-col items-center gap-2"
-          style={{ opacity: headerOpacity }}
+          style={{ opacity: currentHeaderOpacity }}
         >
           <span className="text-[8px] uppercase tracking-[0.3em] text-white/40" style={{ fontFamily: "var(--font-space)" }}>Scroll</span>
           <div className="w-[1px] h-6 bg-gradient-to-b from-white/40 to-transparent" />
@@ -271,41 +277,45 @@ export default function ShopPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <a href="#hoodies" className="group text-[10px] sm:text-xs uppercase tracking-[0.3em] text-black/60 hover:text-black transition-colors duration-300">
-              <span className="group-hover:underline underline-offset-8 decoration-black/30">Hoodies</span>
-              <span className="ml-2 text-black/30">({products.filter(p => p.status === "available" && p.category === "hoodie").length})</span>
+            <a href="#collection" className="group text-[10px] sm:text-xs uppercase tracking-[0.3em] text-black/60 hover:text-black transition-colors duration-300">
+              <span className="group-hover:underline underline-offset-8 decoration-black/30">The Collection</span>
+              <span className="ml-2 text-black/30">({products.filter(p => p.status === "available").length})</span>
             </a>
-            <a href="#tees" className="group text-[10px] sm:text-xs uppercase tracking-[0.3em] text-black/60 hover:text-black transition-colors duration-300">
-              <span className="group-hover:underline underline-offset-8 decoration-black/30">T-Shirts</span>
-              <span className="ml-2 text-black/30">({products.filter(p => p.status === "available" && p.category === "tee").length})</span>
+            <a href="#coming-soon" className="group text-[10px] sm:text-xs uppercase tracking-[0.3em] text-black/60 hover:text-black transition-colors duration-300">
+              <span className="group-hover:underline underline-offset-8 decoration-black/30">Coming Soon</span>
+              <span className="ml-2 text-black/30">({products.filter(p => p.status === "coming_soon").length})</span>
             </a>
-            <a href="#accessories" className="group text-[10px] sm:text-xs uppercase tracking-[0.3em] text-black/60 hover:text-black transition-colors duration-300">
-              <span className="group-hover:underline underline-offset-8 decoration-black/30">Accessories</span>
-              <span className="ml-2 text-black/30">({products.filter(p => p.status === "available" && p.category === "beanie").length})</span>
+            <a href="#the-vault" className="group text-[10px] sm:text-xs uppercase tracking-[0.3em] text-black/60 hover:text-black transition-colors duration-300">
+              <span className="group-hover:underline underline-offset-8 decoration-black/30">The Vault</span>
+              <span className="ml-2 text-black/30">({products.filter(p => p.status === "sold_out").length})</span>
             </a>
           </motion.div>
 
-          {/* ============ HOODIES SECTION ============ */}
-          {products.filter(p => p.status === "available" && p.category === "hoodie").length > 0 && (
-            <div id="hoodies" className="mb-20 sm:mb-28 scroll-mt-24">
+          {/* ============ THE COLLECTION SECTION ============ */}
+          {products.filter(p => p.status === "available").length > 0 && (
+            <div id="collection" className="mb-20 sm:mb-28 scroll-mt-24">
               <motion.div
-                className="flex items-end justify-between mb-8 sm:mb-12"
+                className="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-20"
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
               >
                 <div>
-                  <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-black/40 mb-2">Premium Collection</p>
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-extralight tracking-tight text-black">Hoodies</h2>
+                  <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-black/40 mb-3">New Arrival • V2 Collection</p>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-extralight tracking-tight text-black">
+                    Signature Drops
+                  </h2>
                 </div>
-                <span className="text-[10px] sm:text-xs text-black/40 tracking-wide">
-                  {products.filter(p => p.status === "available" && p.category === "hoodie").length} items
-                </span>
+                <div className="mt-4 md:mt-0">
+                  <span className="text-[10px] sm:text-xs text-black/40 tracking-wide">
+                    {products.filter(p => p.status === "available").length} Limited Pieces
+                  </span>
+                </div>
               </motion.div>
 
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-12 sm:gap-x-6 sm:gap-y-16">
-                {products.filter(p => p.status === "available" && p.category === "hoodie").map((p, idx) => {
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-10 sm:gap-x-8 sm:gap-y-16 lg:gap-x-12">
+                {products.filter(p => p.status === "available").map((p, idx) => {
                   const hasVariants = !!p.variants?.length;
                   const selectedId = selected[p.id];
                   const activeVar = hasVariants && selectedId ? p.variants!.find(v => v.id === selectedId) : undefined;
@@ -316,191 +326,46 @@ export default function ShopPage() {
                   return (
                     <motion.div
                       key={p.id}
-                      initial={{ opacity: 0, y: 30 }}
+                      initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, margin: "-80px" }}
-                      transition={{ duration: 0.5, delay: (idx % 4) * 0.05, ease: "easeOut" }}
+                      viewport={{ once: true, margin: "-50px" }}
+                      transition={{ duration: 0.6, delay: (idx % 3) * 0.1 }}
                     >
                       <Link href={`/product/${p.slug}`} className="group block">
-                        <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#f0f0f0] mb-4">
+                        <div className="relative aspect-[3/4] w-full overflow-hidden bg-white mb-4 sm:mb-6">
                           <div
-                            className="absolute inset-0 flex transition-transform duration-500 ease-out"
+                            className="absolute inset-0 flex transition-transform duration-700 ease-out"
                             style={{ transform: `translateX(-${(idxForCard % (mediaArr.length || 1)) * 100}%)` }}
                           >
                             {(mediaArr.length ? mediaArr : [currentMedia]).map((m, i) => (
                               <div key={i} className="relative h-full w-full shrink-0 basis-full">
-                                <Media src={m} alt={p.name} className={`transition-transform duration-700 ease-out group-hover:scale-[1.03] ${m.includes("/AI-generated/") ? "object-contain" : "object-cover"}`} />
+                                <Media 
+                                  src={m} 
+                                  alt={p.name} 
+                                  className="transition-transform duration-700 ease-out group-hover:scale-[1.03]" 
+                                  style={{ objectFit: 'contain' }}
+                                />
                               </div>
                             ))}
                           </div>
-                          <div className="absolute inset-0 border border-transparent group-hover:border-black/20 transition-colors duration-300 pointer-events-none" />
+                          
+                          {/* Subtle border for separation on white background */}
+                          <div className="absolute inset-0 border border-black/[0.03] pointer-events-none" />
+                          
                           {mediaArr.length > 1 && (
                             <>
-                              <button type="button" aria-label="Previous image" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setSlideIndex((s) => ({ ...s, [p.id]: (idxForCard - 1 + mediaArr.length) % mediaArr.length })); }} className="absolute inset-y-0 left-0 w-1/2 cursor-w-resize z-10" />
-                              <button type="button" aria-label="Next image" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setSlideIndex((s) => ({ ...s, [p.id]: (idxForCard + 1) % mediaArr.length })); }} className="absolute inset-y-0 right-0 w-1/2 cursor-e-resize z-10" />
+                              <button suppressHydrationWarning type="button" aria-label="Previous image" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setSlideIndex((s) => ({ ...s, [p.id]: (idxForCard - 1 + mediaArr.length) % mediaArr.length })); }} className="absolute inset-y-0 left-0 w-1/2 cursor-w-resize z-10" />
+                              <button suppressHydrationWarning type="button" aria-label="Next image" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setSlideIndex((s) => ({ ...s, [p.id]: (idxForCard + 1) % mediaArr.length })); }} className="absolute inset-y-0 right-0 w-1/2 cursor-e-resize z-10" />
                             </>
                           )}
-                          {mediaArr.length > 1 && (
-                            <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1">
-                              {mediaArr.map((_, i) => (
-                                <span key={i} className={`block w-1 h-1 rounded-full transition-all duration-300 ${i === idxForCard % mediaArr.length ? 'bg-black w-4' : 'bg-black/30'}`} />
-                              ))}
-                            </div>
-                          )}
                         </div>
-                        <div className="space-y-1">
-                          <h3 className="text-[11px] sm:text-xs uppercase tracking-[0.15em] text-black font-normal truncate group-hover:underline underline-offset-4 decoration-black/30 transition-all duration-300">{p.name}</h3>
-                          {p.price && <p className="text-[11px] sm:text-xs text-black/60 tracking-wide font-light">{p.price}</p>}
-                        </div>
-                      </Link>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
 
-          {/* ============ TEES SECTION ============ */}
-          {products.filter(p => p.status === "available" && p.category === "tee").length > 0 && (
-            <div id="tees" className="mb-20 sm:mb-28 scroll-mt-24">
-              <motion.div
-                className="flex items-end justify-between mb-8 sm:mb-12"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
-                <div>
-                  <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-black/40 mb-2">Essential Collection</p>
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-extralight tracking-tight text-black">T-Shirts</h2>
-                </div>
-                <span className="text-[10px] sm:text-xs text-black/40 tracking-wide">
-                  {products.filter(p => p.status === "available" && p.category === "tee").length} items
-                </span>
-              </motion.div>
-
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-12 sm:gap-x-6 sm:gap-y-16">
-                {products.filter(p => p.status === "available" && p.category === "tee").map((p, idx) => {
-                  const hasVariants = !!p.variants?.length;
-                  const selectedId = selected[p.id];
-                  const activeVar = hasVariants && selectedId ? p.variants!.find(v => v.id === selectedId) : undefined;
-                  const mediaArr = hasVariants ? (activeVar?.media ?? (p.media || [])) : (p.media || []);
-                  const idxForCard = slideIndex[p.id] ?? 0;
-                  const currentMedia = mediaArr[idxForCard] || mediaArr[0] || "";
-
-                  return (
-                    <motion.div
-                      key={p.id}
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, margin: "-80px" }}
-                      transition={{ duration: 0.5, delay: (idx % 4) * 0.05, ease: "easeOut" }}
-                    >
-                      <Link href={`/product/${p.slug}`} className="group block">
-                        <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#f0f0f0] mb-4">
-                          <div
-                            className="absolute inset-0 flex transition-transform duration-500 ease-out"
-                            style={{ transform: `translateX(-${(idxForCard % (mediaArr.length || 1)) * 100}%)` }}
-                          >
-                            {(mediaArr.length ? mediaArr : [currentMedia]).map((m, i) => (
-                              <div key={i} className="relative h-full w-full shrink-0 basis-full">
-                                <Media src={m} alt={p.name} className={`transition-transform duration-700 ease-out group-hover:scale-[1.03] ${m.includes("/AI-generated/") ? "object-contain" : "object-cover"}`} />
-                              </div>
-                            ))}
+                        <div className="space-y-1 px-1">
+                          <h3 className="text-[10px] sm:text-[11px] uppercase tracking-[0.15em] text-black font-medium truncate">{p.name}</h3>
+                          <div className="flex justify-between items-center">
+                            <p className="text-[10px] sm:text-[11px] text-black/40 tracking-wider font-light">{p.price}</p>
+                            <span className="text-[8px] uppercase tracking-[0.2em] text-black/20 font-bold group-hover:text-black/60 transition-colors">View</span>
                           </div>
-                          <div className="absolute inset-0 border border-transparent group-hover:border-black/20 transition-colors duration-300 pointer-events-none" />
-                          {mediaArr.length > 1 && (
-                            <>
-                              <button type="button" aria-label="Previous image" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setSlideIndex((s) => ({ ...s, [p.id]: (idxForCard - 1 + mediaArr.length) % mediaArr.length })); }} className="absolute inset-y-0 left-0 w-1/2 cursor-w-resize z-10" />
-                              <button type="button" aria-label="Next image" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setSlideIndex((s) => ({ ...s, [p.id]: (idxForCard + 1) % mediaArr.length })); }} className="absolute inset-y-0 right-0 w-1/2 cursor-e-resize z-10" />
-                            </>
-                          )}
-                          {mediaArr.length > 1 && (
-                            <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1">
-                              {mediaArr.map((_, i) => (
-                                <span key={i} className={`block w-1 h-1 rounded-full transition-all duration-300 ${i === idxForCard % mediaArr.length ? 'bg-black w-4' : 'bg-black/30'}`} />
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                        <div className="space-y-1">
-                          <h3 className="text-[11px] sm:text-xs uppercase tracking-[0.15em] text-black font-normal truncate group-hover:underline underline-offset-4 decoration-black/30 transition-all duration-300">{p.name}</h3>
-                          {p.price && <p className="text-[11px] sm:text-xs text-black/60 tracking-wide font-light">{p.price}</p>}
-                        </div>
-                      </Link>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* ============ ACCESSORIES SECTION ============ */}
-          {products.filter(p => p.status === "available" && p.category === "beanie").length > 0 && (
-            <div id="accessories" className="scroll-mt-24">
-              <motion.div
-                className="flex items-end justify-between mb-8 sm:mb-12"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
-                <div>
-                  <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-black/40 mb-2">Finishing Touches</p>
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-extralight tracking-tight text-black">Accessories</h2>
-                </div>
-                <span className="text-[10px] sm:text-xs text-black/40 tracking-wide">
-                  {products.filter(p => p.status === "available" && p.category === "beanie").length} items
-                </span>
-              </motion.div>
-
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-12 sm:gap-x-6 sm:gap-y-16">
-                {products.filter(p => p.status === "available" && p.category === "beanie").map((p, idx) => {
-                  const hasVariants = !!p.variants?.length;
-                  const selectedId = selected[p.id];
-                  const activeVar = hasVariants && selectedId ? p.variants!.find(v => v.id === selectedId) : undefined;
-                  const mediaArr = hasVariants ? (activeVar?.media ?? (p.media || [])) : (p.media || []);
-                  const idxForCard = slideIndex[p.id] ?? 0;
-                  const currentMedia = mediaArr[idxForCard] || mediaArr[0] || "";
-
-                  return (
-                    <motion.div
-                      key={p.id}
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, margin: "-80px" }}
-                      transition={{ duration: 0.5, delay: (idx % 4) * 0.05, ease: "easeOut" }}
-                    >
-                      <Link href={`/product/${p.slug}`} className="group block">
-                        <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#f0f0f0] mb-4">
-                          <div
-                            className="absolute inset-0 flex transition-transform duration-500 ease-out"
-                            style={{ transform: `translateX(-${(idxForCard % (mediaArr.length || 1)) * 100}%)` }}
-                          >
-                            {(mediaArr.length ? mediaArr : [currentMedia]).map((m, i) => (
-                              <div key={i} className="relative h-full w-full shrink-0 basis-full">
-                                <Media src={m} alt={p.name} className={`transition-transform duration-700 ease-out group-hover:scale-[1.03] ${m.includes("/AI-generated/") ? "object-contain" : "object-cover"}`} />
-                              </div>
-                            ))}
-                          </div>
-                          <div className="absolute inset-0 border border-transparent group-hover:border-black/20 transition-colors duration-300 pointer-events-none" />
-                          {mediaArr.length > 1 && (
-                            <>
-                              <button type="button" aria-label="Previous image" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setSlideIndex((s) => ({ ...s, [p.id]: (idxForCard - 1 + mediaArr.length) % mediaArr.length })); }} className="absolute inset-y-0 left-0 w-1/2 cursor-w-resize z-10" />
-                              <button type="button" aria-label="Next image" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setSlideIndex((s) => ({ ...s, [p.id]: (idxForCard + 1) % mediaArr.length })); }} className="absolute inset-y-0 right-0 w-1/2 cursor-e-resize z-10" />
-                            </>
-                          )}
-                          {mediaArr.length > 1 && (
-                            <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1">
-                              {mediaArr.map((_, i) => (
-                                <span key={i} className={`block w-1 h-1 rounded-full transition-all duration-300 ${i === idxForCard % mediaArr.length ? 'bg-black w-4' : 'bg-black/30'}`} />
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                        <div className="space-y-1">
-                          <h3 className="text-[11px] sm:text-xs uppercase tracking-[0.15em] text-black font-normal truncate group-hover:underline underline-offset-4 decoration-black/30 transition-all duration-300">{p.name}</h3>
-                          {p.price && <p className="text-[11px] sm:text-xs text-black/60 tracking-wide font-light">{p.price}</p>}
                         </div>
                       </Link>
                     </motion.div>
@@ -517,7 +382,7 @@ export default function ShopPage() {
 
         {/* The Vault - Premium Sold Out Section */}
         {products.filter(p => p.status === "sold_out").length > 0 && (
-          <div className="relative py-20 px-4 sm:px-6 -mx-3 sm:-mx-4 mt-16">
+          <div id="the-vault" className="relative py-20 px-4 sm:px-6 -mx-3 sm:-mx-4 mt-16 scroll-mt-24">
             {/* Dark gradient background */}
             <div className="absolute inset-0 bg-gradient-to-b from-neutral-900 via-black to-neutral-900" />
 
@@ -623,62 +488,6 @@ export default function ShopPage() {
 
       </section>
 
-      {/* Section 1 - Black Background (Collection Hero) */}
-      <section className="relative min-h-screen bg-black text-white flex items-center justify-center overflow-hidden">
-        {/* Subtle gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black opacity-60" />
-
-        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
-          <p className="text-[10px] sm:text-xs uppercase tracking-[0.4em] text-white/40 mb-8 font-light">
-            Collection
-          </p>
-          <h2 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-extralight tracking-[-0.02em] mb-8 leading-[0.9]">
-            GOLD RUSH
-          </h2>
-          <p className="text-base sm:text-lg text-white/50 font-light tracking-wide max-w-lg mx-auto leading-relaxed">
-            Premium streetwear infused with real gold. Every piece tells a story of value.
-          </p>
-          <div className="mt-12">
-            <span className="inline-block border border-white/20 text-white/60 px-8 py-3 text-[10px] uppercase tracking-[0.3em] hover:bg-white hover:text-black transition-all duration-500 cursor-pointer">
-              Explore Collection
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 2 - White Background (Featured Product) */}
-      <section className="min-h-screen bg-white text-black flex items-center justify-center px-6 py-24">
-        <div className="max-w-6xl w-full">
-          <div className="grid md:grid-cols-2 gap-16 md:gap-24 items-center">
-            {/* Left - Image */}
-            <div className="relative aspect-[4/5] bg-neutral-50 overflow-hidden group">
-              <Image
-                src="/Hoodie.png"
-                alt="Featured Product"
-                fill
-                className="object-contain transition-transform duration-700 group-hover:scale-105"
-              />
-            </div>
-            {/* Right - Content */}
-            <div className="space-y-8">
-              <p className="text-[10px] uppercase tracking-[0.4em] text-neutral-400">Featured</p>
-              <h2 className="text-4xl sm:text-5xl md:text-6xl font-extralight tracking-tight leading-[1.1]">
-                Members Only<br />
-                <span className="font-normal">Hoodie</span>
-              </h2>
-              <p className="text-neutral-500 text-base leading-relaxed max-w-md">
-                Crafted for those who understand value. Each hoodie comes with 7 grams of pure gold,
-                making it not just apparel, but an investment.
-              </p>
-              <div className="pt-4">
-                <Link href="/product/mv-members-only-hoodie" className="inline-block border border-black text-black px-10 py-4 text-[10px] uppercase tracking-[0.3em] hover:bg-black hover:text-white transition-all duration-500">
-                  View Product
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Section 3 - Black Background (Brand Story) */}
       <section className="min-h-screen bg-black text-white flex items-center justify-center px-6 py-24">
@@ -714,7 +523,7 @@ export default function ShopPage() {
       </section>
 
       {/* Section 4 - White Background (Coming Soon Grid) */}
-      <section className="min-h-screen bg-white text-black py-24 px-6">
+      <section id="coming-soon" className="min-h-screen bg-white text-black py-24 px-6 scroll-mt-24">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
             <p className="text-[10px] uppercase tracking-[0.4em] text-neutral-400 mb-6">Preview</p>
@@ -770,11 +579,12 @@ export default function ShopPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
             <input
+              suppressHydrationWarning
               type="email"
               placeholder="Enter your email"
               className="flex-1 bg-transparent border border-white/20 px-6 py-4 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-white/50 transition-colors"
             />
-            <button className="bg-white text-black px-8 py-4 text-[10px] uppercase tracking-[0.3em] hover:bg-white/90 transition-all duration-300">
+            <button suppressHydrationWarning className="bg-white text-black px-8 py-4 text-[10px] uppercase tracking-[0.3em] hover:bg-white/90 transition-all duration-300">
               Subscribe
             </button>
           </div>
@@ -800,14 +610,22 @@ export default function ShopPage() {
           </a>
         </div>
 
-        {/* Massive Brand Typography - THE MAIN EVENT */}
-        <div className="relative z-0 pb-4 sm:pb-6 overflow-hidden">
-          <h2
-            className="text-center text-[18vw] sm:text-[16vw] md:text-[14vw] font-extralight tracking-[0.05em] text-white leading-[0.85] select-none whitespace-nowrap uppercase"
-            aria-hidden="true"
+        {/* Massive Brand Typography - THE MAIN EVENT (Marquee Animation) */}
+        <div className="relative z-0 pb-4 sm:pb-6 overflow-hidden border-t border-white/5 pt-8">
+          <motion.div 
+            className="flex whitespace-nowrap"
+            animate={{ x: ["0%", "-50%"] }}
+            transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
           >
-            MOST VALUABLE
-          </h2>
+            {[...Array(4)].map((_, i) => (
+              <span
+                key={i}
+                className="text-[18vw] sm:text-[16vw] md:text-[14vw] font-extralight tracking-[0.05em] text-white leading-[0.85] select-none uppercase px-12"
+              >
+                Most Valuable
+              </span>
+            ))}
+          </motion.div>
         </div>
 
         {/* Copyright - Tiny at bottom */}
