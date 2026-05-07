@@ -269,27 +269,6 @@ export default function ShopPage() {
       <section id="products" className="relative z-20 w-full bg-[#fafafa]">
         <div className="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16 pt-12 sm:pt-16 pb-24 sm:pb-32">
 
-          {/* Category Navigation - Sticky */}
-          <motion.div
-            className="flex items-center justify-center gap-8 sm:gap-12 mb-12 sm:mb-16 py-4 border-b border-black/10"
-            initial={{ opacity: 0, y: -10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <a href="#collection" className="group text-[10px] sm:text-xs uppercase tracking-[0.3em] text-black/60 hover:text-black transition-colors duration-300">
-              <span className="group-hover:underline underline-offset-8 decoration-black/30">The Collection</span>
-              <span className="ml-2 text-black/30">({products.filter(p => p.status === "available").length})</span>
-            </a>
-            <a href="#coming-soon" className="group text-[10px] sm:text-xs uppercase tracking-[0.3em] text-black/60 hover:text-black transition-colors duration-300">
-              <span className="group-hover:underline underline-offset-8 decoration-black/30">Coming Soon</span>
-              <span className="ml-2 text-black/30">({products.filter(p => p.status === "coming_soon").length})</span>
-            </a>
-            <a href="#the-vault" className="group text-[10px] sm:text-xs uppercase tracking-[0.3em] text-black/60 hover:text-black transition-colors duration-300">
-              <span className="group-hover:underline underline-offset-8 decoration-black/30">The Vault</span>
-              <span className="ml-2 text-black/30">({products.filter(p => p.status === "sold_out").length})</span>
-            </a>
-          </motion.div>
 
           {/* ============ THE COLLECTION SECTION ============ */}
           {products.filter(p => p.status === "available").length > 0 && (

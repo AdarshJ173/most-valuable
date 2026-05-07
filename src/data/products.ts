@@ -14,52 +14,42 @@ export const products: Product[] = [
   // Version 2.0 Collection
   {
     id: "mv-v2-tee-1",
-    name: "MV Signature Tee 01",
-    slug: "mv-signature-tee-01",
+    name: "A Valuable Shirt - Black",
+    slug: "a-valuable-shirt-black",
     status: "available",
     category: "tee",
     price: "$65",
-    description: "Premium heavyweight cotton tee from the Version 2.0 collection. Featuring a refined fit and signature branding.",
+    description: "Premium heavyweight cotton tee from the Version 2.0 collection. Featuring a refined fit and signature branding in Black.",
     media: ["/new-tshirts/3EA5AC2B-D465-4476-B4CB-D4FB7FE655E4.jpeg"]
   },
   {
-    id: "mv-v2-tee-2",
-    name: "MV Signature Tee 02",
-    slug: "mv-signature-tee-02",
-    status: "available",
-    category: "tee",
-    price: "$65",
-    description: "Premium heavyweight cotton tee from the Version 2.0 collection. Featuring a refined fit and signature branding.",
-    media: ["/new-tshirts/565E0605-FA71-4966-BCB1-ED9213C25BBF.jpeg"]
-  },
-  {
     id: "mv-v2-tee-3",
-    name: "MV Signature Tee 03",
-    slug: "mv-signature-tee-03",
+    name: "A Valuable Shirt - Gold",
+    slug: "a-valuable-shirt-gold",
     status: "available",
     category: "tee",
     price: "$65",
-    description: "Premium heavyweight cotton tee from the Version 2.0 collection. Featuring a refined fit and signature branding.",
+    description: "Premium heavyweight cotton tee from the Version 2.0 collection. Featuring a refined fit and signature branding in Gold.",
     media: ["/new-tshirts/80691A88-B2C9-48AB-BC3D-2F488BB5709E.jpeg"]
   },
   {
     id: "mv-v2-tee-4",
-    name: "MV Signature Tee 04",
-    slug: "mv-signature-tee-04",
+    name: "A Valuable Shirt - Red",
+    slug: "a-valuable-shirt-red",
     status: "available",
     category: "tee",
     price: "$65",
-    description: "Premium heavyweight cotton tee from the Version 2.0 collection. Featuring a refined fit and signature branding.",
+    description: "Premium heavyweight cotton tee from the Version 2.0 collection. Featuring a refined fit and signature branding in Red.",
     media: ["/new-tshirts/A87CD522-D362-48C7-A9D3-97763FD59405.jpeg"]
   },
   {
     id: "mv-v2-tee-5",
-    name: "MV Signature Tee 05",
-    slug: "mv-signature-tee-05",
+    name: "A Valuable Shirt - White",
+    slug: "a-valuable-shirt-white",
     status: "available",
     category: "tee",
     price: "$65",
-    description: "Premium heavyweight cotton tee from the Version 2.0 collection. Featuring a refined fit and signature branding.",
+    description: "Premium heavyweight cotton tee from the Version 2.0 collection. Featuring a refined fit and signature branding in White.",
     media: ["/new-tshirts/E52AF589-FFDE-4D29-9F0C-3FB4CC7464FC.jpeg"]
   },
 

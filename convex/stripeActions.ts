@@ -48,7 +48,8 @@ export const createCheckoutSession: any = action({
       args.productId === "p6" ||
       args.productId === "p7" ||
       args.productId === "p1b" ||
-      args.productId === "p1w";
+      args.productId === "p1w" ||
+      (args.productId?.startsWith("mv-v2-tee-") ?? false);
 
     // Calculate pricing based on purchase type
     let unitAmount: number;
@@ -81,6 +82,17 @@ export const createCheckoutSession: any = action({
         unitAmount = 35000; // $350.00 in cents
         productName = "Box Logo Tee - White";
         productDescription = `Iconic box logo tee in white (Size: ${args.selectedSize || 'M'}) - 1g Gold Included`;
+      } else if (args.productId?.startsWith("mv-v2-tee-")) {
+        const colorNames: Record<string, string> = {
+          'mv-v2-tee-1': 'Black',
+          'mv-v2-tee-3': 'Gold',
+          'mv-v2-tee-4': 'Red',
+          'mv-v2-tee-5': 'White',
+        };
+        const colorName = colorNames[args.productId] || 'Signature';
+        unitAmount = 6500; // $65.00 in cents
+        productName = `A Valuable Shirt - ${colorName}`;
+        productDescription = `Premium heavyweight cotton tee from the Version 2.0 collection (Size: ${args.selectedSize || 'M'})`;
       } else if (args.productId === "raffle") {
         unitAmount = 10000; // $100.00 in cents
         productName = "A Valuable Shirt";
