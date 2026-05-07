@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState, use } from "react";
 import { products } from "@/data/products";
 import InstagramLink from "@/components/InstagramLink";
+import Navbar from "@/components/Navbar";
 
 function mediaUrl(path: string) {
   if (path.startsWith("/media/")) return path.replace("/media/", "/socoldblooded-attachments/");
@@ -77,6 +78,7 @@ export default function ProductDetail({ params }: { params: Promise<{ slug: stri
 
   return (
     <main className="min-h-screen bg-white text-black">
+      <Navbar />
       <div className="mx-auto max-w-6xl px-6 py-10">
         <header className="mb-8 flex items-center justify-between">
           <Link href="/shop" className="text-sm underline">← Back to shop</Link>
@@ -188,25 +190,50 @@ export default function ProductDetail({ params }: { params: Promise<{ slug: stri
                       const checkoutUrl = `/checkout?quantity=1&product=${product.id}&variant=${activeVariantId || 'raffle-blk'}&color=${encodeURIComponent(selectedColor)}&type=direct${sizeParam}`;
                       window.location.href = checkoutUrl;
                     }}
-                    className="w-full rounded-full bg-black px-6 py-4 text-base font-medium text-white transition hover:bg-black/90 mb-8"
+                    className="w-full bg-[#C9972B] px-6 py-4 text-sm font-bold text-black uppercase tracking-[0.1em] transition hover:bg-[#b08425] mb-8"
+                    style={{ borderRadius: 0 }}
                   >
                     Buy — $100
                   </button>
                 ) : product.status === "available" ? (
-                  <button
-                    onClick={() => {
-                      const selectedColor = activeVariantId ? product.variants?.find(v => v.id === activeVariantId)?.color || 'Default' : 'Default';
-                      const sizeParam = (product.category === "tee" || product.category === "hoodie") ? `&size=${encodeURIComponent(size)}` : '';
-                      const checkoutUrl = `/checkout?quantity=1&product=${product.id}&variant=${activeVariantId || product.id}&color=${encodeURIComponent(selectedColor)}&type=direct${sizeParam}`;
-                      window.location.href = checkoutUrl;
-                    }}
-                    className="w-full rounded-full bg-black text-white px-6 py-4 text-base font-medium mb-8 transition hover:bg-black/90"
-                  >
-                    Add to Cart — {product.price}
-                  </button>
+                  <div className="flex flex-col gap-3 mb-8">
+                    <button
+                      onClick={() => {
+                        const selectedColor = activeVariantId ? product.variants?.find(v => v.id === activeVariantId)?.color || 'Default' : 'Default';
+                        const sizeParam = (product.category === "tee" || product.category === "hoodie") ? `&size=${encodeURIComponent(size)}` : '';
+                        const checkoutUrl = `/checkout?quantity=1&product=${product.id}&variant=${activeVariantId || product.id}&color=${encodeURIComponent(selectedColor)}&type=direct${sizeParam}`;
+                        window.location.href = checkoutUrl;
+                      }}
+                      className="w-full bg-[#C9972B] text-black px-6 py-4 text-sm font-bold uppercase tracking-[0.1em] transition hover:bg-[#b08425]"
+                      style={{ borderRadius: 0 }}
+                    >
+                      Buy Now
+                    </button>
+                    <button
+                      onClick={() => {
+                        // Simulated Add to Cart
+                        const cartItem = { 
+                          id: product.id, 
+                          name: product.name, 
+                          price: product.price, 
+                          size, 
+                          color: activeVariantId ? product.variants?.find(v => v.id === activeVariantId)?.color : 'Default' 
+                        };
+                        const existingCart = JSON.parse(localStorage.getItem('mv-cart') || '[]');
+                        localStorage.setItem('mv-cart', JSON.stringify([...existingCart, cartItem]));
+                        window.dispatchEvent(new Event('cart-updated'));
+                        alert(`${product.name} added to cart.`);
+                      }}
+                      className="w-full bg-white text-black border border-black px-6 py-4 text-sm font-bold uppercase tracking-[0.1em] transition hover:bg-black hover:text-white"
+                      style={{ borderRadius: 0 }}
+                    >
+                      Add to Cart — {product.price}
+                    </button>
+                  </div>
                 ) : (
                   <button
-                    className="w-full rounded-full bg-gray-400 text-white px-6 py-4 text-base font-medium mb-8 cursor-not-allowed"
+                    className="w-full bg-gray-300 text-white px-6 py-4 text-sm font-bold uppercase tracking-[0.1em] mb-8 cursor-not-allowed"
+                    style={{ borderRadius: 0 }}
                     disabled
                   >
                     Sold Out

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Oswald } from "next/font/google";
+import { Oswald, Cormorant_Garamond, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import React from "react";
 import SplashScreen from "@/components/SplashScreen";
@@ -9,6 +9,19 @@ const oswald = Oswald({
   variable: "--font-oswald",
   subsets: ["latin"],
   weight: ["200", "300", "400", "500", "600", "700"],
+});
+
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  style: ["normal", "italic"],
+});
+
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -57,7 +70,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${oswald.variable} font-sans antialiased bg-white text-slate-900`}>
+      <body className={`${oswald.variable} ${cormorant.variable} ${spaceGrotesk.variable} font-sans antialiased bg-white text-slate-900`}>
         <ConvexClientProvider>
           <SplashScreen />
           {children}

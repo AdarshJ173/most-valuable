@@ -80,6 +80,10 @@ export const PRODUCT_PRICING: Record<string, { price: number; name: string }> = 
     'box-logo-zipper': { price: 85, name: 'Box Logo Zipper' },
     'box-logo-beanie': { price: 85, name: 'Box Logo Beanie' },
     'raffle': { price: 100, name: 'A Valuable Shirt' },
+    'mv-v2-tee-1': { price: 65, name: 'A Valuable Shirt - Black' },
+    'mv-v2-tee-3': { price: 65, name: 'A Valuable Shirt - Gold' },
+    'mv-v2-tee-4': { price: 65, name: 'A Valuable Shirt - Red' },
+    'mv-v2-tee-5': { price: 65, name: 'A Valuable Shirt - White' },
 };
 
 // Direct purchase product IDs
@@ -93,4 +97,8 @@ export const DIRECT_PURCHASE_PRODUCT_IDS = [
     'p1w',
     'box-logo-zipper',
     'box-logo-beanie',
+    'mv-v2-tee-1',
+    'mv-v2-tee-3',
+    'mv-v2-tee-4',
+    'mv-v2-tee-5',
 ];
