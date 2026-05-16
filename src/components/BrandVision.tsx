@@ -34,7 +34,7 @@ export default function BrandVision() {
             className="text-white font-light italic leading-[1.3] tracking-tight" 
             style={{ fontSize: "clamp(28px, 5vw, 48px)", fontFamily: "var(--font-serif, serif)" }}
           >
-            "Perspective Creates Value."
+            &quot;Perspective Creates Value.&quot;
           </motion.h2>
 
           <motion.div
